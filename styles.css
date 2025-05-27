@@ -1,0 +1,303 @@
+   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #ff0055, #6600cc);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+.btn-voltar {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 10px 20px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+  z-index: 999;
+}
+
+.btn-voltar:hover {
+  background-color: #1976d2;
+}
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 2rem 1.5rem;
+      border-radius: 25px;
+      box-shadow: 0 0 20px rgba(255, 0, 100, 0.6);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .btn-discreto {
+    background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.4;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.btn-discreto:hover {
+   opacity: 1;
+}
+
+    .animacao-resultado {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  font-weight: bold;
+  padding: 20px 40px;
+  border-radius: 10px;
+  color: white;
+  z-index: 1000;
+  animation: pop 1s ease-out;
+}
+
+.animacao-prenda {
+  font-size: 48px;
+  font-weight: bold;
+  color: inherit; /* Mantém a cor padrão */
+  text-shadow: 
+    -2px -2px 0 yellow, 
+    2px -2px 0 yellow, 
+    -2px 2px 0 yellow, 
+    2px 2px 0 yellow;
+  animation: pulse 0.6s infinite alternate;
+}
+
+.animacao-verdade {
+  background-color: #4caf50;
+  box-shadow: 0 0 20px #4caf50;
+}
+
+.animacao-consequencia {
+  background-color: #e91e63;
+  box-shadow: 0 0 20px #e91e63;
+}
+
+@keyframes pop {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 0, 100, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(255, 0, 100, 0.9);
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      color: #ffaad4;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      padding: 0.8rem;
+      width: 90%;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    button {
+      background: linear-gradient(135deg, #ff007f, #ff9900);
+      color: #fff;
+      border: none;
+      padding: 0.9rem 1.6rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      margin: 0.4rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #ffaad4;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #resultado, #mensagem, #placar {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      color: #ffe6f7;
+      min-height: 60px;
+    }
+
+    #vez-do-jogador {
+      font-weight: bold;
+      color: #ffc4ec;
+      margin: 1rem 0;
+    }
+
+    .nivel-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nivel-btns button {
+      width: 30%;
+      height: 80px;
+      font-size: 3rem; 
+      background-color: #fff;
+      color: #000;
+      border: 2px solid #ff007f;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nivel-btns button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #ffaad4;
+    }
+
+    .roleta-container {
+      position: relative;
+      width: 90vw;
+      max-width: 300px;
+      aspect-ratio: 1 / 1;
+      margin: 30px auto 10px auto;
+      user-select: none;
+    }
+
+    canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+    #roleta-canvas {
+  border-radius: 50%;
+  border: 6px solid #333;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  transition: transform 0.5s ease-out;
+  background: radial-gradient(circle at center, #fff 40%, #ccc 100%);
+}
+
+    .roleta-container canvas {
+      width: 100%;
+      height: 100%;
+      transform-origin: center;
+      transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
+      border-radius: 50%;
+      box-shadow: 0 0 15px #fff6;
+    }
+
+    .ponteiro {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid #ff5722;
+      z-index: 10;
+      filter: drop-shadow(0 0 4px #ff5722);
+    }
+
+    #btn-roleta {
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, #00f2ff, #0077ff);
+      border: 2px solid #00d9ff;
+      margin-top: 15px;
+    }
+
+    #avaliacao {
+      margin-top: 15px;
+    }
+
+    #avaliacao button {
+      width: 45%;
+      font-size: 1.1rem;
+    }
+
+    #roleta-container {
+  transition: opacity 0.5s ease;
+}
+.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .nivel-btns button {
+        width: 80%;
+        height: 70px;
+        font-size: 2.8rem;
+      }
+
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      #avaliacao button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }

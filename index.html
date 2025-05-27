@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verdade ou Consequência</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>Verdade ou Consequência</h1>
+
+    <section id="cadastro-section">
+      <input type="text" id="jogador1" placeholder="Nome do Jogador 1" />
+      <input type="text" id="jogador2" placeholder="Nome do Jogador 2" />
+      <button onclick="iniciar()">Começar</button>
+    </section>
+
+    <section id="nivel-section" style="display:none;">
+      <h2>Escolha o Nível</h2>
+      <div class="nivel-btns">
+        <button onclick="selecionarNivel('😄')">😄</button>
+        <button onclick="selecionarNivel('😏')">😏</button>
+        <button onclick="selecionarNivel('🔥')">🔥</button>
+      </div>
+    </section>
+
+    <section id="jogo-section" style="display:none;">
+      <div id="nivel-escolhido"></div>
+      <div id="vez-do-jogador"></div>
+      <div class="roleta-container" id="roleta-container" style="display:none;">
+        <div class="ponteiro"></div>
+        <canvas id="roleta-canvas"></canvas>
+      </div>
+
+      <div id="animacao-resultado" class="animacao-resultado hidden"></div>
+
+      <button id="btn-roleta" onclick="girarRoleta()">Girar Roleta</button>
+      
+
+      <div id="mensagem" class="mensagem"></div>
+      <div id="resultado" class="resultado"></div>
+
+      <div id="avaliacao" style="display:none;">
+       <button id="btn-cumpriu" onclick="avaliar(true)">Cumpriu</button>
+      <button id="btn-nao-cumpriu" onclick="avaliar(false)">Não Cumpriu</button>
+
+      </div>
+
+      <div id="placar" class="placar"></div>
+     <button id="btn-voltar-discreto" class="btn-voltar" onclick="voltarParaSelecaoDeNivel()" style="display:none;">↩ Níveis</button>
+    </section>
+
+    <button id="btn-reiniciar" style="display: none;" onclick="reiniciarJogo()">Reiniciar</button>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>
