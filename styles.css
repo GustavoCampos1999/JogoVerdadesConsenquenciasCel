@@ -147,15 +147,9 @@ button:disabled {
   box-shadow: 0 0 10px #e91e63;
 }
 .animacao-prenda {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: inherit;
-  text-shadow: 
-    -1px -1px 0 yellow, 
-    1px -1px 0 yellow, 
-    -1px 1px 0 yellow, 
-    1px 1px 0 yellow;
-  animation: pulse 0.6s infinite alternate;
+  background-color: yellow;
+  color: #000; /* texto preto ou mude para branco se preferir */
+  box-shadow: 0 0 20px yellow;
 }
 .hidden {
   display: none;

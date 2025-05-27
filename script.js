@@ -167,7 +167,7 @@ function mostrarResultado(indice) {
       frase = consequenciasNivel[Math.floor(Math.random() * consequenciasNivel.length)];
     }
 
-    resultado.textContent = frase;
+    resultado.textContent = `${jogadores[jogadorAtual]}, ${frase}`;
     avaliacao.style.display = "block";
     btnGirar.disabled = false;
     document.getElementById("btn-voltar-discreto").disabled = false;
@@ -181,7 +181,7 @@ function avaliar(cumpriu) {
   btnGirar.disabled = true;
 
   const animacao = document.getElementById("animacao-resultado");
-  animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia");
+  animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia", "animacao-prenda");
   animacao.style.color = "";
 
   if (aguardandoPrenda) {
@@ -236,19 +236,17 @@ setTimeout(() => {
       const prenda = prendas[Math.floor(Math.random() * prendas.length)];
 
       mensagem.textContent = "Você deve pagar uma prenda!";
-      resultado.textContent = `Prenda: ${prenda}`;
+      resultado.textContent = `Prenda: ${jogadores[jogadorAtual]}, ${prenda}`; 
 
-      animacao.textContent = "⚠️ Pague a prenda!";
-      animacao.classList.add("animacao-consequencia");
-      animacao.style.color = "yellow";
-
+     animacao.textContent = "Pague a prenda!";
+    animacao.classList.add("animacao-prenda");
       setTimeout(() => {
         animacao.classList.add("hidden");
         document.getElementById("btn-cumpriu").disabled = false;
         document.getElementById("btn-nao-cumpriu").disabled = false;
       }, 1500);
 
-      return;  // ✅ Espera resposta da prenda
+      return;  
     } else {
       mensagem.textContent = "Você não cumpriu!";
       animacao.textContent = "❌";
@@ -314,13 +312,28 @@ function reiniciarJogo() {
 }
 
 function voltarParaSelecaoDeNivel() {
-  document.getElementById("jogo-section").style.display = "none";
-  document.getElementById("nivel-section").style.display = "block";
-  
-  mensagem.textContent = "";
-  resultado.textContent = "";
-  avaliacao.style.display = "none";
-  document.getElementById("btn-voltar-discreto").style.display = "none";
+ document.getElementById("jogo-section").style.display = "none";
+document.getElementById("nivel-section").style.display = "block";
+document.getElementById("btn-voltar-discreto").style.display = "none";
+
+pontos = [0, 0];
+penalidades = [0, 0];
+desafiosNaoCumpridos = [0, 0];
+jogadorAtual = 0;
+ultimaEscolha = "";
+aguardandoPrenda = false;
+
+placar.textContent = "";
+mensagem.textContent = "";
+resultado.textContent = "";
+avaliacao.style.display = "none";
+
+const animacao = document.getElementById("animacao-resultado");
+animacao.className = "animacao-resultado hidden";
+animacao.textContent = "";
+
+document.getElementById("escolha-container").style.display = "none";
+btnGirar.disabled = false;
 }
 
 document.getElementById("btn-cumpriu").addEventListener('click', () => avaliar(true));
