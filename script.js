@@ -1251,7 +1251,7 @@ function selecionarNivel(nivel) {
 }
 
 function ajustarTamanhoCanvas() {
-  tamanho = Math.min(window.innerWidth * 0.8, 300);
+  tamanho = Math.min(window.innerWidth * 0.6, 220);
   canvas.width = tamanho;
   canvas.height = tamanho;
 }
@@ -1322,7 +1322,7 @@ function desenharRoleta() {
     ctx.rotate((anguloInicial + anguloFinal) / 2);
     ctx.textAlign = "right";
     ctx.fillStyle = "#222";
-    ctx.font = "600 17px 'Quicksand', sans-serif";
+   ctx.font = "600 14px 'Quicksand', sans-serif";
     ctx.fillText(segmentos[i].texto, raio - 10, 5);
     ctx.restore();
   }

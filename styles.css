@@ -86,30 +86,37 @@ button:disabled {
 
 .roleta-container {
   position: relative;
-  width: 75vw; /* menor */
-  max-width: 250px;
+  width: 70vw;
+  max-width: 240px; /* aumentei um pouco para compensar o ponteiro */
   aspect-ratio: 1 / 1;
-  margin: 20px auto 10px auto;
+  margin: 15px auto 5px auto;
+  padding: 10px; /* adiciona espaço entre borda e roleta */
+  box-sizing: border-box;
+  overflow: visible; /* deixa espaço pro ponteiro sair */
 }
 
 canvas {
   max-width: 100%;
   height: auto;
+  display: block;
   border-radius: 50%;
   border: 4px solid #333;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  background: radial-gradient(circle at center, #fff 40%, #ccc 100%);
 }
 
 .ponteiro {
   position: absolute;
-  top: -10px; /* menor */
+  top: -12px; /* sobe um pouco mais */
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
+  border-left: 10px solid transparent; /* um pouco maior que antes */
   border-right: 10px solid transparent;
-  border-bottom: 20px solid #ff5722;
+  border-bottom: 20px solid #ff5722; /* cor laranja chamativa */
+  z-index: 10;
+  filter: drop-shadow(0 0 3px #ff5722);
 }
 
 #vez-do-jogador {
@@ -121,10 +128,18 @@ canvas {
 
 #resultado, #mensagem, #placar {
   margin-top: 1.5rem;
-  font-size: 1.6rem; /* ou 1.8rem para ainda maior */
+  font-size: 1rem; /* ou 1.8rem para ainda maior */
   font-weight: bold;
   color: #ffe6f7;
-  min-height: 100px;
+  min-height: 85px;
+}
+
+#resultado {
+  font-size: 1.1rem;
+}
+
+#mensagem {
+  font-size: 1rem;
 }
 
 #resultado.prenda {
@@ -192,10 +207,11 @@ canvas {
     font-size: 1.8rem;
   }
 
-  button {
-    width: 100%;
-    margin: 8px 0;
-  }
+ button {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
 
   #avaliacao button {
     width: 100%;
