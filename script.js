@@ -1573,7 +1573,6 @@ function voltarParaSelecaoDeNivel() {
   document.getElementById("btn-voltar-discreto").style.display = "none";
 }
 
-
 document.getElementById("btn-cumpriu").addEventListener('click', () => avaliar(true));
 document.getElementById("btn-nao-cumpriu").addEventListener('click', () => avaliar(false));
 
