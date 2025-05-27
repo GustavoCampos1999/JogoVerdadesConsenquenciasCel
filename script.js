@@ -1429,14 +1429,13 @@ function avaliar(cumpriu) {
   animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia");
   animacao.style.color = "";
 
-  // ✅ Caso esteja pagando a prenda
   if (aguardandoPrenda) {
     if (cumpriu) {
       mensagem.textContent = "Você cumpriu a prenda! O jogo continua.";
       animacao.textContent = "✅";
       animacao.classList.add("animacao-verdade");
-      aguardandoPrenda = false;  // ✅ Liberado pra continuar
-      desafiosNaoCumpridos[jogadorAtual] = 0;  // ✅ Zera os não cumpridos
+      aguardandoPrenda = false;  
+      desafiosNaoCumpridos[jogadorAtual] = 0;  
 
       setTimeout(() => {
         animacao.classList.add("hidden");
@@ -1449,29 +1448,26 @@ resultado.textContent = `${jogadores[(jogadorAtual + 1) % jogadores.length]} ven
 animacao.textContent = "❌";
 animacao.classList.add("animacao-consequencia");
 
-// ✅ Esconder os botões
 avaliacao.style.display = "none";
 document.getElementById("btn-voltar-discreto").style.display = "none";
 
-// ✅ Mostrar botão de reiniciar
 document.getElementById("btn-reiniciar").style.display = "inline-block";
 
-// ✅ Ocultar a animação após alguns segundos
 setTimeout(() => {
     animacao.classList.add("hidden");
     animacao.textContent = "";
 }, 1500);
     }
-    return;  // ✅ Não continua o fluxo se for prenda
+    return;  
   }
 
-  // ✅ Caso seja desafio normal
+ 
   if (cumpriu) {
     pontos[jogadorAtual]++;
     mensagem.textContent = "Você cumpriu! +1 ponto.";
     animacao.textContent = "✅";
     animacao.classList.add("animacao-verdade");
-    desafiosNaoCumpridos[jogadorAtual] = 0;  // ✅ Reset ao cumprir
+    desafiosNaoCumpridos[jogadorAtual] = 0;  
   } else {
     penalidades[jogadorAtual]++;
     desafiosNaoCumpridos[jogadorAtual]++;
@@ -1481,7 +1477,6 @@ setTimeout(() => {
     }
 
     if (desafiosNaoCumpridos[jogadorAtual] >= 2) {
-      // ✅ ATIVA a prenda só após 2 falhas
       aguardandoPrenda = true;
       const prenda = prendas[Math.floor(Math.random() * prendas.length)];
 

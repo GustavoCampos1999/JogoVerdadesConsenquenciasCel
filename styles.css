@@ -9,27 +9,27 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px; /* Reduzido */
+  padding: 10px; 
   box-sizing: border-box;
 }
 
 .container {
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 1rem; /* Reduzido */
+  padding: 1rem; 
   border-radius: 20px;
   box-shadow: 0 0 15px rgba(255, 0, 100, 0.6);
   text-align: center;
   width: 100%;
-  max-width: 350px; /* menor para tela pequena */
+  max-width: 350px; 
 }
 
 h1 {
-  font-size: 1.5rem; /* menor */
+  font-size: 1.5rem; 
   margin-bottom: 0.8rem;
 }
 
 h2 {
-  font-size: 1rem; /* menor */
+  font-size: 1rem; 
   color: #ffaad4;
   margin-bottom: 0.8rem;
 }
@@ -70,14 +70,14 @@ button:disabled {
 .nivel-btns {
   display: flex;
   justify-content: center;
-  gap: 0.5rem; /* menor */
+  gap: 0.5rem; 
   flex-wrap: wrap;
 }
 
 .nivel-btns button {
   width: 25%;
-  height: 60px; /* menor */
-  font-size: 2rem; /* menor */
+  height: 60px; 
+  font-size: 2rem; 
   background-color: #fff;
   color: #000;
   border: 2px solid #ff007f;
@@ -87,12 +87,12 @@ button:disabled {
 .roleta-container {
   position: relative;
   width: 70vw;
-  max-width: 240px; /* aumentei um pouco para compensar o ponteiro */
+  max-width: 240px; 
   aspect-ratio: 1 / 1;
   margin: 15px auto 5px auto;
-  padding: 10px; /* adiciona espaço entre borda e roleta */
+  padding: 10px; 
   box-sizing: border-box;
-  overflow: visible; /* deixa espaço pro ponteiro sair */
+  overflow: visible; 
 }
 
 canvas {
@@ -107,14 +107,14 @@ canvas {
 
 .ponteiro {
   position: absolute;
-  top: -12px; /* sobe um pouco mais */
+  top: -12px; 
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) rotate(0deg);
   width: 0;
   height: 0;
-  border-left: 10px solid transparent; /* um pouco maior que antes */
-  border-right: 10px solid transparent;
-  border-bottom: 20px solid #ff5722; /* cor laranja chamativa */
+  border-left: 8px solid transparent;   
+  border-right: 8px solid transparent;  
+  border-top: 16px solid #ff5722;       
   z-index: 10;
   filter: drop-shadow(0 0 3px #ff5722);
 }
@@ -122,16 +122,16 @@ canvas {
 #vez-do-jogador {
   font-weight: bold;
   color: #ffc4ec;
-  margin: 0.8rem 0;
+  margin: 0.3rem 0; 
   font-size: 0.9rem;
 }
 
 #resultado, #mensagem, #placar {
-  margin-top: 1.5rem;
-  font-size: 1rem; /* ou 1.8rem para ainda maior */
+ margin-top: 0.3rem; 
+  font-size: 1rem;
   font-weight: bold;
   color: #ffe6f7;
-  min-height: 85px;
+  min-height: 30px; 
 }
 
 #resultado {
@@ -163,13 +163,13 @@ canvas {
   top: 30%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem; /* ainda chamativo, mas menor */
+  font-size: 2rem; 
   font-weight: bold;
   padding: 10px 20px;
   border-radius: 10px;
   color: white;
   z-index: 1000;
-  animation: pop 0.6s ease-out; /* mantemos */
+  animation: pop 0.6s ease-out; 
 }
 
 .animacao-verdade {
