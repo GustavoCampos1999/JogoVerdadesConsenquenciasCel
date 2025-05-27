@@ -1427,58 +1427,84 @@ function avaliar(cumpriu) {
 
   const animacao = document.getElementById("animacao-resultado");
   animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia");
+  animacao.style.color = "";
 
+  // ✅ Caso esteja pagando a prenda
+  if (aguardandoPrenda) {
+    if (cumpriu) {
+      mensagem.textContent = "Você cumpriu a prenda! O jogo continua.";
+      animacao.textContent = "✅";
+      animacao.classList.add("animacao-verdade");
+      aguardandoPrenda = false;  // ✅ Liberado pra continuar
+      desafiosNaoCumpridos[jogadorAtual] = 0;  // ✅ Zera os não cumpridos
+
+      setTimeout(() => {
+        animacao.classList.add("hidden");
+        atualizarPlacar();
+        proximoTurno();
+      }, 1500);
+    } else {
+     mensagem.textContent = `${jogadores[jogadorAtual]} não cumpriu a prenda! Fim de jogo!`;
+resultado.textContent = `${jogadores[(jogadorAtual + 1) % jogadores.length]} venceu!`;
+animacao.textContent = "❌";
+animacao.classList.add("animacao-consequencia");
+
+// ✅ Esconder os botões
+avaliacao.style.display = "none";
+document.getElementById("btn-voltar-discreto").style.display = "none";
+
+// ✅ Mostrar botão de reiniciar
+document.getElementById("btn-reiniciar").style.display = "inline-block";
+
+// ✅ Ocultar a animação após alguns segundos
+setTimeout(() => {
+    animacao.classList.add("hidden");
+    animacao.textContent = "";
+}, 1500);
+    }
+    return;  // ✅ Não continua o fluxo se for prenda
+  }
+
+  // ✅ Caso seja desafio normal
   if (cumpriu) {
     pontos[jogadorAtual]++;
     mensagem.textContent = "Você cumpriu! +1 ponto.";
     animacao.textContent = "✅";
     animacao.classList.add("animacao-verdade");
-    desafiosNaoCumpridos[jogadorAtual] = 0;
-    aguardandoPrenda = false;
+    desafiosNaoCumpridos[jogadorAtual] = 0;  // ✅ Reset ao cumprir
   } else {
     penalidades[jogadorAtual]++;
     desafiosNaoCumpridos[jogadorAtual]++;
 
     if (pontos[jogadorAtual] > 0) {
-        pontos[jogadorAtual]--;
+      pontos[jogadorAtual]--;
     }
 
-    if (aguardandoPrenda) {
-        mensagem.textContent = `${jogadores[jogadorAtual]} não cumpriu a prenda! Fim de jogo!`;
-        resultado.textContent = `${jogadores[(jogadorAtual + 1) % jogadores.length]} venceu!`;
-        
-        avaliacao.style.display = "none";
-        btnGirar.style.display = "none";
-        document.getElementById("btn-reiniciar").style.display = "inline-block";
-        return;
+    if (desafiosNaoCumpridos[jogadorAtual] >= 2) {
+      // ✅ ATIVA a prenda só após 2 falhas
+      aguardandoPrenda = true;
+      const prenda = prendas[Math.floor(Math.random() * prendas.length)];
+
+      mensagem.textContent = "Você deve pagar uma prenda!";
+      resultado.textContent = `Prenda: ${prenda}`;
+
+      animacao.textContent = "⚠️ Pague a prenda!";
+      animacao.classList.add("animacao-consequencia");
+      animacao.style.color = "yellow";
+
+      setTimeout(() => {
+        animacao.classList.add("hidden");
+        document.getElementById("btn-cumpriu").disabled = false;
+        document.getElementById("btn-nao-cumpriu").disabled = false;
+      }, 1500);
+
+      return;  // ✅ Espera resposta da prenda
+    } else {
+      mensagem.textContent = "Você não cumpriu!";
+      animacao.textContent = "❌";
+      animacao.classList.add("animacao-consequencia");
     }
-
-    mensagem.textContent = "Você não cumpriu!";
-    animacao.textContent = "❌";
-    animacao.classList.add("animacao-consequencia");
-
-  if (desafiosNaoCumpridos[jogadorAtual] >= 2) {
-    aguardandoPrenda = true;
-    mensagem.textContent = "Você deve pagar uma prenda!";
-    const prenda = prendas[Math.floor(Math.random() * prendas.length)];
-    resultado.textContent = `Prenda: ${prenda}`;
-
-  animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia");
-animacao.textContent = "Pague a prenda ou perca!";
-animacao.style.color = "yellow";  
-animacao.classList.add("animacao-consequencia");
-
-    setTimeout(() => {
-      animacao.classList.add("hidden");
-      animacao.textContent = "";
-      animacao.style.color = "";
-    }, 2000);  
-
-    document.getElementById("btn-cumpriu").disabled = false;
-    document.getElementById("btn-nao-cumpriu").disabled = false;
-    return;
-}
-}
+  }
 
   atualizarPlacar();
 
@@ -1547,17 +1573,9 @@ function voltarParaSelecaoDeNivel() {
   document.getElementById("btn-voltar-discreto").style.display = "none";
 }
 
-  document.getElementById("btn-roleta").addEventListener('touchstart', girarRoleta);
-document.getElementById("btn-roleta").addEventListener('click', girarRoleta);
 
-document.getElementById("btn-cumpriu").addEventListener('touchstart', () => avaliar(true));
 document.getElementById("btn-cumpriu").addEventListener('click', () => avaliar(true));
-
-document.getElementById("btn-nao-cumpriu").addEventListener('touchstart', () => avaliar(false));
 document.getElementById("btn-nao-cumpriu").addEventListener('click', () => avaliar(false));
-
-document.getElementById("btn-voltar-discreto").addEventListener('touchstart', voltarParaSelecaoDeNivel);
-document.getElementById("btn-voltar-discreto").addEventListener('click', voltarParaSelecaoDeNivel);
 
 function verificarFimDeJogo() {
   const limite = limitesPontuacao[nivelSelecionado];
@@ -1570,6 +1588,7 @@ function verificarFimDeJogo() {
       avaliacao.style.display = "none";
       resultado.textContent = "";
       document.getElementById("btn-reiniciar").style.display = "inline-block";
+      document.getElementById("btn-voltar-discreto").style.display = "none";
       return true;
     }
   }
