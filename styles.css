@@ -200,6 +200,15 @@ canvas {
   overflow: hidden;
 }
 
+.creditos {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: #ffaad4;
+  text-align: center;
+  opacity: 0.8;
+  line-height: 1.2;
+}
+
 @media (max-width: 600px) {
   .nivel-btns button {
     width: 70%;
