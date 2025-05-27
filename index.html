@@ -37,14 +37,14 @@
     <section id="jogo-section" style="display:none;">
       <div id="nivel-escolhido"></div>
       <div id="vez-do-jogador"></div>
-      <div class="roleta-container" id="roleta-container" style="display:none;">
-        <div class="ponteiro"></div>
-        <canvas id="roleta-canvas"></canvas>
-      </div>
+   <div id="escolha-container" style="display: none;" class="escolha-container">
+  <div class="opcao" id="opcao-verdade">Verdade</div>
+  <div class="opcao" id="opcao-consequencia">Consequência</div>
+</div>
 
       <div id="animacao-resultado" class="animacao-resultado hidden"></div>
 
-      <button id="btn-roleta" onclick="girarRoleta()">Girar Roleta</button>
+      <button id="btn-roleta" onclick="girarRoleta()">Sortear</button>
       
 
       <div id="mensagem" class="mensagem"></div>

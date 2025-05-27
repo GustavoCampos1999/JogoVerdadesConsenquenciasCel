@@ -10,8 +10,7 @@ let aguardandoPrenda = false;
 
 
 
-const canvas = document.getElementById("roleta-canvas");
-const ctx = canvas.getContext("2d");
+
 const btnGirar = document.getElementById("btn-roleta");
 const mensagem = document.getElementById("mensagem");
 const resultado = document.getElementById("resultado");
@@ -27,8 +26,6 @@ const limitesPontuacao = {
 };
 
 let tamanho = 300;
-canvas.width = tamanho;
-canvas.height = tamanho;
 
 const segmentos = [
   { texto: "Verdade", cor: "#4caf50" },
@@ -69,34 +66,20 @@ function selecionarNivel(nivel) {
 
   document.getElementById("nivel-section").style.display = "none";
   document.getElementById("jogo-section").style.display = "block";
-  document.getElementById("roleta-container").style.display = "block";
   atualizarVez();
-  desenharRoleta();
   atualizarPlacar();
   btnGirar.style.display = "inline-block";
   document.getElementById("btn-voltar-discreto").style.display = "inline-block";
 }
 
-function ajustarTamanhoCanvas() {
-  tamanho = Math.min(window.innerWidth * 0.6, 220);
-  canvas.width = tamanho;
-  canvas.height = tamanho;
-}
-
-window.addEventListener('resize', ajustarTamanhoCanvas);
-ajustarTamanhoCanvas();
-
 function atualizarVez() {
   document.getElementById("vez-do-jogador").textContent = `É a vez de: ${jogadores[jogadorAtual]}`;
-  
-  document.getElementById("roleta-container").classList.remove("hidden");
   mensagem.textContent = `Vez de ${jogadores[jogadorAtual]}!`;
   resultado.textContent = "";
   avaliacao.style.display = "none";
   btnGirar.style.display = "none"; 
   girando = false;
   anguloAtual = 0;
-  desenharRoleta();
 }
 
 function repetirPergunta() {
@@ -124,92 +107,33 @@ function atualizarPlacar() {
   placar.textContent = `${jogadores[0]}: ${pontos[0]} pts — ${jogadores[1]}: ${pontos[1]} pts`;
 }
 
-function desenharRoleta() {
-  const raio = canvas.width / 2;
-  const total = segmentos.length;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < total; i++) {
-    const anguloInicial = (2 * Math.PI * i) / total;
-    const anguloFinal = (2 * Math.PI * (i + 1)) / total;
-
-    const gradiente = ctx.createRadialGradient(raio, raio, 10, raio, raio, raio);
-    gradiente.addColorStop(0, "#ffffff");
-    gradiente.addColorStop(1, segmentos[i].cor);
-
-    ctx.beginPath();
-    ctx.moveTo(raio, raio);
-    ctx.arc(raio, raio, raio, anguloInicial, anguloFinal);
-    ctx.fillStyle = gradiente;
-    ctx.fill();
-
-    ctx.save();
-    ctx.translate(raio, raio);
-    ctx.rotate((anguloInicial + anguloFinal) / 2);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#222";
-   ctx.font = "600 14px 'Quicksand', sans-serif";
-    ctx.fillText(segmentos[i].texto, raio - 10, 5);
-    ctx.restore();
-  }
-
-  ctx.save();
-  ctx.translate(raio, raio);
-  ctx.beginPath();
-  ctx.moveTo(0, -raio);
-  ctx.lineTo(-15, -raio - 20);
-  ctx.lineTo(15, -raio - 20);
-  ctx.closePath();
-  ctx.fillStyle = "#fdd835";
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.fill();
-  ctx.restore();
-}
 
 function girarRoleta() {
   if (girando) return;
-  document.querySelectorAll('.btn-voltar').forEach(btn => btn.disabled = true);
-  document.getElementById("roleta-container").classList.remove("hidden");
-  btnGirar.style.display = "none";
   girando = true;
-  btnGirar.disabled = true;
-  mensagem.textContent = "Girando...";
+  mensagem.textContent = "Sorteando...";
+  btnGirar.style.display = "none";
 
-  const girosCompletos = Math.floor(Math.random() * 4) + 4;
-  const duracao = 1000;
+  document.getElementById("escolha-container").style.display = "flex";
 
-  const anguloParada = Math.random() * 2 * Math.PI;
-  const anguloFinal = girosCompletos * 2 * Math.PI + anguloParada;
+  const opcoes = [document.getElementById("opcao-verdade"), document.getElementById("opcao-consequencia")];
+  let selecionadoIndex = Math.floor(Math.random() * 2);
+  let ciclos = 10 + Math.floor(Math.random() * 5);
+  let atual = 0;
 
-  let inicio = null;
-
-  function animar(timestamp) {
-    if (!inicio) inicio = timestamp;
-    let tempoDecorrido = timestamp - inicio;
-    if (tempoDecorrido > duracao) tempoDecorrido = duracao;
-
-    const progresso = tempoDecorrido / duracao;
-    const easeOutProgress = 1 - Math.pow(1 - progresso, 3);
-
-    anguloAtual = anguloFinal * easeOutProgress;
-    canvas.style.transform = `rotate(${anguloAtual}rad)`;
-
-    if (tempoDecorrido < duracao) {
-      requestAnimationFrame(animar);
-    } else {
+  const intervalo = setInterval(() => {
+    opcoes[0].classList.remove("piscar");
+    opcoes[1].classList.remove("piscar");
+    opcoes[atual % 2].classList.add("piscar");
+    atual++;
+    if (atual >= ciclos) {
+      clearInterval(intervalo);
+      opcoes[0].classList.remove("piscar");
+      opcoes[1].classList.remove("piscar");
+      mostrarResultado(selecionadoIndex);
       girando = false;
-      const anguloNormalized = anguloAtual % (2 * Math.PI);
-      const anguloInverso = (2 * Math.PI - anguloNormalized) % (2 * Math.PI);
-      let segmentoSelecionado = Math.floor(anguloInverso / Math.PI);
-      mostrarResultado(segmentoSelecionado);
-      btnGirar.disabled = false;
     }
-  }
-
-  requestAnimationFrame(animar);
+  }, 250);
 }
 
 function mostrarResultado(indice) {
@@ -220,8 +144,9 @@ function mostrarResultado(indice) {
   resultado.textContent = "";
   avaliacao.style.display = "none";
 
-  const animacao = document.getElementById("animacao-resultado");
+  document.getElementById("escolha-container").style.display = "none";
 
+  const animacao = document.getElementById("animacao-resultado");
   animacao.className = "animacao-resultado";
   animacao.textContent = tipo === "verdade" ? "Verdade" : "Consequência";
 
@@ -231,8 +156,6 @@ function mostrarResultado(indice) {
   setTimeout(() => {
     animacao.className = "animacao-resultado hidden";
     animacao.textContent = "";
-
-    document.getElementById("roleta-container").classList.add("hidden");
 
     let frase = "";
     if (tipo === "verdade") {
@@ -245,8 +168,8 @@ function mostrarResultado(indice) {
 
     resultado.textContent = frase;
     avaliacao.style.display = "block";
-    document.querySelectorAll('.btn-voltar').forEach(btn => btn.disabled = false);
-  }, 1000);
+    btnGirar.disabled = false;
+  }, 500);
 }
 
 function avaliar(cumpriu) {
@@ -280,8 +203,8 @@ animacao.classList.add("animacao-consequencia");
 
 avaliacao.style.display = "none";
 document.getElementById("btn-voltar-discreto").style.display = "none";
-
 document.getElementById("btn-reiniciar").style.display = "inline-block";
+document.getElementById("escolha-container").style.display = "flex";
 
 setTimeout(() => {
     animacao.classList.add("hidden");
@@ -369,7 +292,6 @@ function reiniciarJogo() {
 
   document.getElementById("nivel-section").style.display = "block";
   document.getElementById("jogo-section").style.display = "none";
-  document.getElementById("roleta-container").style.display = "none";
   document.getElementById("btn-reiniciar").style.display = "none";
 
   placar.textContent = "";
@@ -395,7 +317,6 @@ function voltarParaSelecaoDeNivel() {
   mensagem.textContent = "";
   resultado.textContent = "";
   avaliacao.style.display = "none";
-  document.getElementById("roleta-container").style.display = "none";
   document.getElementById("btn-voltar-discreto").style.display = "none";
 }
 
