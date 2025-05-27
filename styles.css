@@ -175,6 +175,16 @@ button:disabled {
 }
 
 @media (max-width: 600px) {
+  .escolha-container {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.opcao {
+  width: 100%;
+  max-width: 100%;
+}
+
   .nivel-btns button {
     width: 70%;
     height: 50px;
@@ -219,21 +229,27 @@ button:disabled {
 .escolha-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1rem;
-  margin: 1rem 0;
+  margin: 1rem auto;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .opcao {
-  padding: 1rem 2rem;
+  flex: 1 1 45%;
+  max-width: 140px;
+  padding: 1rem 1rem;
   border-radius: 12px;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: default;
-  min-width: 140px;
   text-align: center;
+  color: #fff;
   transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  color: #fff;
 }
 
 #opcao-verdade {

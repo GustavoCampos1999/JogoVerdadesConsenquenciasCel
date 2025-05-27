@@ -110,6 +110,7 @@ function atualizarPlacar() {
 
 function girarRoleta() {
   if (girando) return;
+  document.getElementById("btn-voltar-discreto").disabled = true;
   girando = true;
   mensagem.textContent = "Sorteando...";
   btnGirar.style.display = "none";
@@ -118,7 +119,7 @@ function girarRoleta() {
 
   const opcoes = [document.getElementById("opcao-verdade"), document.getElementById("opcao-consequencia")];
   let selecionadoIndex = Math.floor(Math.random() * 2);
-  let ciclos = 10 + Math.floor(Math.random() * 5);
+  let ciclos = 4 + Math.floor(Math.random() * 5);
   let atual = 0;
 
   const intervalo = setInterval(() => {
@@ -169,7 +170,8 @@ function mostrarResultado(indice) {
     resultado.textContent = frase;
     avaliacao.style.display = "block";
     btnGirar.disabled = false;
-  }, 500);
+    document.getElementById("btn-voltar-discreto").disabled = false;
+  }, 1000);
 }
 
 function avaliar(cumpriu) {
@@ -204,7 +206,7 @@ animacao.classList.add("animacao-consequencia");
 avaliacao.style.display = "none";
 document.getElementById("btn-voltar-discreto").style.display = "none";
 document.getElementById("btn-reiniciar").style.display = "inline-block";
-document.getElementById("escolha-container").style.display = "flex";
+document.getElementById("escolha-container").style.display = "none";
 
 setTimeout(() => {
     animacao.classList.add("hidden");
@@ -308,6 +310,7 @@ function reiniciarJogo() {
 
   document.getElementById("btn-cumpriu").disabled = false;
   document.getElementById("btn-nao-cumpriu").disabled = false;
+  document.getElementById("btn-voltar-discreto").style.display = "inline-block";
 }
 
 function voltarParaSelecaoDeNivel() {

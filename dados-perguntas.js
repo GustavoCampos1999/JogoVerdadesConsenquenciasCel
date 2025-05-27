@@ -1,5 +1,4 @@
 const perguntas = {
-  
   facil: {
     verdade: ["Qual parte do meu corpo você mais gosta?", 
       "Qual foi o melhor momento que passamos juntos?", 
