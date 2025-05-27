@@ -103,10 +103,6 @@ button:disabled {
   font-size: 1.1rem;
 }
 
-#mensagem {
-  font-size: 1rem;
-}
-
 #resultado.prenda {
   font-size: 1.8rem;
   color: yellow;
@@ -167,19 +163,18 @@ button:disabled {
   opacity: 0.8;
   line-height: 1.2;
 }
+
 .mensagem-vitoria {
-  font-size: 3rem; 
+  font-size: 2.2rem !important;
   font-weight: bold;
-  color: #ffeb3b;
   background: linear-gradient(90deg, #ff4081, #ffc107, #8bc34a, #00bcd4);
   background-size: 400% 100%;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: brilhar 2s ease-in-out infinite;
+  animation: brilhar 3s linear infinite;
   text-align: center;
-  padding: 30px; 
-  border-radius: 16px;
+  margin: 10px 0;
 }
 
 @keyframes brilhar {

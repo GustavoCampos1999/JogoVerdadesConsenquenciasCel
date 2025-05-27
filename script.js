@@ -261,17 +261,16 @@ setTimeout(() => {
 
   atualizarPlacar();
 
-  setTimeout(() => {
-    animacao.classList.add("hidden");
-    if (!verificarFimDeJogo()) {
-      proximoTurno();
-    } else {
-      avaliacao.style.display = "none";
-      resultado.textContent = "";
-      btnGirar.style.display = "none";
-      document.getElementById("btn-reiniciar").style.display = "inline-block";
-    }
-  }, 1500);
+setTimeout(() => {
+  animacao.classList.add("hidden");
+  if (!verificarFimDeJogo()) {
+    proximoTurno();
+  } else {
+    avaliacao.style.display = "none";
+    btnGirar.style.display = "none";
+    document.getElementById("btn-reiniciar").style.display = "inline-block";
+  }
+}, 1500);
 }
 
 function proximoTurno() {
@@ -352,21 +351,21 @@ function verificarFimDeJogo() {
   const diff = Math.abs(pontos[0] - pontos[1]);
 
   for (let i = 0; i < jogadores.length; i++) {
-if (pontos[i] >= limite && diff >= 2) {
-  const vencedor = jogadores[i];
-  const perdedor = jogadores[(i + 1) % 2];
+    if (pontos[i] >= limite && diff >= 2) {
+      const vencedor = jogadores[i];
+      const perdedor = jogadores[(i + 1) % 2];
 
-mensagem.classList.add("mensagem-vitoria");
-  mensagem.textContent = `${vencedor} venceu o jogo!`;
-resultado.textContent = `${perdedor}, vire um copo (ou meio se o copo for grande) o mais rápido possível.`;
+      mensagem.classList.add("mensagem-vitoria");
+      mensagem.textContent = `${vencedor} venceu o jogo!`;
+      resultado.textContent = `${perdedor}, vire um copo (ou meio se o copo for grande) o mais rápido possível.`;
 
-  btnGirar.style.display = "none";
-  avaliacao.style.display = "none";
-  document.getElementById("btn-reiniciar").style.display = "inline-block";
-  document.getElementById("btn-voltar-discreto").style.display = "none";
+      btnGirar.style.display = "none";
+      avaliacao.style.display = "none";
+      document.getElementById("btn-reiniciar").style.display = "inline-block";
+      document.getElementById("btn-voltar-discreto").style.display = "none";
 
-  return true;
-}
+      return true;
+    }
   }
 
   return false;
