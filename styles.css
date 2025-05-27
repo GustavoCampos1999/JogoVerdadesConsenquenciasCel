@@ -148,7 +148,7 @@ button:disabled {
 }
 .animacao-prenda {
   background-color: yellow;
-  color: #000; /* texto preto ou mude para branco se preferir */
+  color: #000; 
   box-shadow: 0 0 20px yellow;
 }
 .hidden {
@@ -166,6 +166,32 @@ button:disabled {
   text-align: center;
   opacity: 0.8;
   line-height: 1.2;
+}
+.mensagem-vitoria {
+  font-size: 3rem; 
+  font-weight: bold;
+  color: #ffeb3b;
+  background: linear-gradient(90deg, #ff4081, #ffc107, #8bc34a, #00bcd4);
+  background-size: 400% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brilhar 2s ease-in-out infinite;
+  text-align: center;
+  padding: 30px; 
+  border-radius: 16px;
+}
+
+@keyframes brilhar {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -247,12 +273,12 @@ button:disabled {
 }
 
 #opcao-verdade {
-  background-color: #00ff7f; /* Neon green */
+  background-color: #00ff7f; 
   box-shadow: 0 0 20px #00ff7f;
 }
 
 #opcao-consequencia {
-  background-color: #ff1744; /* Neon red */
+  background-color: #ff1744; 
   box-shadow: 0 0 20px #ff1744;
 }
 

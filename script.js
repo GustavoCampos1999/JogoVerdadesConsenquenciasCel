@@ -182,6 +182,7 @@ function avaliar(cumpriu) {
 
   const animacao = document.getElementById("animacao-resultado");
   animacao.classList.remove("hidden", "animacao-verdade", "animacao-consequencia", "animacao-prenda");
+
   animacao.style.color = "";
 
   if (aguardandoPrenda) {
@@ -199,10 +200,14 @@ function avaliar(cumpriu) {
       }, 1500);
     } else {
      mensagem.textContent = `${jogadores[jogadorAtual]} não cumpriu a prenda! Fim de jogo!`;
-resultado.textContent = `${jogadores[(jogadorAtual + 1) % jogadores.length]} venceu!`;
+const perdedor = jogadores[jogadorAtual];
+const vencedor = jogadores[(jogadorAtual + 1) % 2];
+mensagem.classList.add("mensagem-vitoria");
+mensagem.textContent = `${vencedor} venceu o jogo!`;
+resultado.textContent = `${perdedor}, vire um copo (ou meio se o copo for grande) o mais rápido possível.`;
+
 animacao.textContent = "❌";
 animacao.classList.add("animacao-consequencia");
-
 avaliacao.style.display = "none";
 document.getElementById("btn-voltar-discreto").style.display = "none";
 document.getElementById("btn-reiniciar").style.display = "inline-block";
@@ -289,7 +294,7 @@ function reiniciarJogo() {
   jogadorAtual = 0;
   ultimaEscolha = "";
   aguardandoPrenda = false;
-
+mensagem.classList.remove("mensagem-vitoria");
   document.getElementById("nivel-section").style.display = "block";
   document.getElementById("jogo-section").style.display = "none";
   document.getElementById("btn-reiniciar").style.display = "none";
@@ -312,6 +317,7 @@ function reiniciarJogo() {
 }
 
 function voltarParaSelecaoDeNivel() {
+  mensagem.classList.remove("mensagem-vitoria");
  document.getElementById("jogo-section").style.display = "none";
 document.getElementById("nivel-section").style.display = "block";
 document.getElementById("btn-voltar-discreto").style.display = "none";
@@ -346,15 +352,21 @@ function verificarFimDeJogo() {
   const diff = Math.abs(pontos[0] - pontos[1]);
 
   for (let i = 0; i < jogadores.length; i++) {
-    if (pontos[i] >= limite && diff >= 2) {
-      mensagem.textContent = `${jogadores[i]} venceu o jogo!`;
-      btnGirar.style.display = "none";
-      avaliacao.style.display = "none";
-      resultado.textContent = "";
-      document.getElementById("btn-reiniciar").style.display = "inline-block";
-      document.getElementById("btn-voltar-discreto").style.display = "none";
-      return true;
-    }
+if (pontos[i] >= limite && diff >= 2) {
+  const vencedor = jogadores[i];
+  const perdedor = jogadores[(i + 1) % 2];
+
+mensagem.classList.add("mensagem-vitoria");
+  mensagem.textContent = `${vencedor} venceu o jogo!`;
+resultado.textContent = `${perdedor}, vire um copo (ou meio se o copo for grande) o mais rápido possível.`;
+
+  btnGirar.style.display = "none";
+  avaliacao.style.display = "none";
+  document.getElementById("btn-reiniciar").style.display = "inline-block";
+  document.getElementById("btn-voltar-discreto").style.display = "none";
+
+  return true;
+}
   }
 
   return false;
