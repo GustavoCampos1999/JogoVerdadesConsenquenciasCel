@@ -240,6 +240,7 @@ const perguntas = {
       "finja que está pedindo um beijo com um gesto.",
       "Provoque com uma cantada bem criativa.",
        "dance de forma sensual por 1 minuto.",
+       "desafio unico, passe para o próximo nível!"
   ]
   },
 
@@ -436,6 +437,7 @@ const perguntas = {
 "simule sua posição sexual favorita.",
 "sussurre no ouvido de seu parceiro uma fantasia sua.",
 "mostre sua lingerie ou cueca.",
+"mostre um nude seu em seu celular para seu parceiro",
 "deixe alguém passar gelo pelo seu corpo todo.",
 "dance sensualmente por um minuto.",
 "fale ao pé do ouvido de seu parceiro algo picante.",
@@ -471,7 +473,8 @@ const perguntas = {
 "sussurre algo provocante no ouvido de seu parceiro.",
 "simule que está fazendo uma massagem sensual.",
 "diga: 'te desejo' olhando nos olhos.",
-"passe a língua nos lábios de alguém sem beijar."
+"passe a língua nos lábios de alguém sem beijar.",
+"desafio unico, passe para o próximo nível!"
     ]
 
   },
@@ -500,6 +503,7 @@ const perguntas = {
         "você já se imaginou me dominando totalmente na cama?",
         "você deixaria que eu te amarrasse de olhos vendados e fizesse o que eu quisesse?",
   "prefere que eu te provoque lentamente ou te use sem piedade?",
+  "onde você prefere receber/dar uma gozada da pessoa?",
   "se eu te puxasse pelo cabelo e te colocasse contra a parede, o que faria?",
   "qual parte do meu corpo você gostaria de explorar com a língua até me fazer implorar?",
   "você toparia fazer sexo selvagem em um local público só pelo risco?",
@@ -732,6 +736,7 @@ const perguntas = {
     "me olhe nos olhos, segure minha mão e diga o que faria comigo se ninguém estivesse aqui.",
     "me faça arrepiar: toque, beije ou fale algo extremamente excitante.",
     "tire uma peça de roupa agora.",
+    "envie um nude seu para seu parceiro",
     "deixe eu escolher uma parte do seu corpo para beijar agora.",
     "me conduza fisicamente até onde você quer ser beijado.",
     "faça um gemido real no meu ouvido.",
@@ -780,7 +785,6 @@ const perguntas = {
 "fique apenas com calcinha/cueca por 10 minutos.",
 "ajoelhe-se e chupe seu parceiro até ele gozar na sua boca",
 "masturbe seu parceiro olhando nos olhos dele até ele gozar.",
-
 "deixe simular estar te penetrando.",
 "fique de olhos vendados enquanto te provoca por 3 minutos.",
 "faça carinho íntimo no seu parceiro.",
