@@ -130,7 +130,7 @@ function selecionarNivel(nivel) {
 
 function girarRoleta() {
   if (girando) return;
-  document.getElementById("btn-voltar-discreto").disabled = true; // Bloqueia o botão
+  document.getElementById("btn-voltar-discreto").disabled = true;
   girando = true;
   mensagem.textContent = "Sorteando...";
   btnGirar.style.display = "none";
@@ -154,8 +154,6 @@ function girarRoleta() {
         opcoes[selecionadoIndex].classList.remove("piscar");
         mostrarResultado(selecionadoIndex);
         girando = false;
-        // A LINHA ABAIXO FOI REMOVIDA DAQUI:
-        // document.getElementById("btn-voltar-discreto").disabled = false;
       }, 700);
     }
   }, 200);
@@ -181,12 +179,10 @@ function mostrarResultado(indice) {
     animacao.textContent = "";
 
     let fraseSorteada = "";
-    const tipoDesafio = tipo; // "verdade" ou "consequencia"
+    const tipoDesafio = tipo; 
     let arrayCandidato = [];
 
     const isArrayValido = (arr) => Array.isArray(arr) && arr.length > 0 && arr.some(item => typeof item === 'string' && item.trim() !== "");
-
-    // Tentativa 1: Específico do modo e nível
     if (perguntas[modoJogo] && perguntas[modoJogo][nivelSelecionado]) {
       const especifico = perguntas[modoJogo][nivelSelecionado][tipoDesafio];
       if (isArrayValido(especifico)) {
@@ -194,15 +190,13 @@ function mostrarResultado(indice) {
       }
     }
 
-    // Fallback 1: Modo 'dupla' para o nível atual (só se o arrayCandidato ainda estiver vazio)
     if (arrayCandidato.length === 0 && perguntas.dupla && perguntas.dupla[nivelSelecionado]) {
       const fallbackDuplaNivel = perguntas.dupla[nivelSelecionado][tipoDesafio];
       if (isArrayValido(fallbackDuplaNivel)) {
         arrayCandidato = fallbackDuplaNivel;
       }
     }
-    
-    // Fallback 2: Todos os níveis do modo atual (se ainda vazio)
+
     if (arrayCandidato.length === 0 && perguntas[modoJogo]) {
         const pFacil = perguntas[modoJogo].facil?.[tipoDesafio] || [];
         const pMedio = perguntas[modoJogo].medio?.[tipoDesafio] || [];
@@ -211,7 +205,6 @@ function mostrarResultado(indice) {
         if (combinadasModo.length > 0) arrayCandidato = combinadasModo;
     }
 
-    // Fallback 3: Todos os níveis do modo 'dupla' (se ainda vazio)
     if (arrayCandidato.length === 0 && perguntas.dupla) {
         const pFacilDupla = perguntas.dupla.facil?.[tipoDesafio] || [];
         const pMedioDupla = perguntas.dupla.medio?.[tipoDesafio] || [];
@@ -230,9 +223,6 @@ function mostrarResultado(indice) {
     if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
     resultado.innerHTML = `${jogadores[jogadorAtual]}, ${fraseSorteada}`;
     avaliacao.style.display = "flex";
-    
-    // A LINHA ABAIXO PERMANECE AQUI (ou foi movida para cá e confirmada):
-    // Libera o botão voltar APENAS QUANDO A PERGUNTA APARECE.
     document.getElementById("btn-voltar-discreto").disabled = false; 
   }, 1500);
 }
@@ -589,7 +579,6 @@ function voltarParaSelecaoDeNivel() {
   jogadorAtual = 0;
   ultimaEscolha = "";
   aguardandoPrenda = false;
-
   if (placar) placar.textContent = "";
   if (mensagem) mensagem.textContent = "";
   if (resultado) resultado.textContent = "";
@@ -604,7 +593,6 @@ function voltarParaSelecaoDeNivel() {
   }
   if (btnGirar) btnGirar.disabled = false; 
 }
-
 document.getElementById("btn-cumpriu").addEventListener('click', () => avaliar(true));
 document.getElementById("btn-nao-cumpriu").addEventListener('click', () => avaliar(false));
 
@@ -615,7 +603,6 @@ function ativarModoSoVerdade() {
     return;
   }
   if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
-
   document.getElementById("nivel-section").style.display = "none";
   mostrarTelaModoVerdade();
 }
@@ -635,7 +622,6 @@ function mostrarTelaModoVerdade() {
 function anunciarVencedor(vencedor, perdedoresArray) {
   mensagem.classList.add("mensagem-vitoria");
   mensagem.textContent = `${vencedor} venceu o jogo!`;
-
   if (modoJogo === "dupla" && perdedoresArray.length === 1) {
     resultado.textContent = `${perdedoresArray[0]}, vire um copo (ou meio se o copo for grande) o mais rápido possível.`;
   } else if (modoJogo === "grupo") {
@@ -643,7 +629,6 @@ function anunciarVencedor(vencedor, perdedoresArray) {
   } else {
     resultado.textContent = `Parabéns, ${vencedor}!`;
   }
-
   btnGirar.style.display = "none";
   if (document.getElementById("escolha-container")) {
       document.getElementById("escolha-container").style.display = "none";
@@ -660,13 +645,9 @@ function selecionarModoDeJogo(modo) {
   modoJogo = modo;
   document.getElementById("modo-jogo-section").style.display = "none";
   document.getElementById("cadastro-section").style.display = "block";
-
-  // Limpar e resetar todos os campos de jogador
   for (let i = 1; i <= 5; i++) {
     const inputEl = document.getElementById(`jogador${i}`);
-    if (inputEl) inputEl.value = ""; // Limpa valor
-
-    // Esconde containers de J3, J4, J5
+    if (inputEl) inputEl.value = "";
     if (i >= 3) {
       const containerEl = document.getElementById(`campo-jogador${i}-container`);
       if (containerEl) {
@@ -674,33 +655,22 @@ function selecionarModoDeJogo(modo) {
       }
     }
   }
-  // Garante que J1 e J2 (inputs diretos) estejam visíveis
-  // O CSS deve cuidar da sua exibição padrão como 'block' ou 'inline-block'
-  // dentro de #campos-jogadores quando #cadastro-section está visível.
-  // Se eles são display:none por padrão, descomente:
-  // document.getElementById("jogador1").style.display = "block";
-  // document.getElementById("jogador2").style.display = "block";
-
-
   if (modo === "dupla") {
     document.getElementById("cadastro-titulo").textContent = "Nomes da Dupla";
     document.getElementById("btn-add-jogador").style.display = "none";
-    // Garante que J3, J4, J5 fiquem escondidos
     for (let i = 3; i <= 5; i++) {
         const containerEl = document.getElementById(`campo-jogador${i}-container`);
         if (containerEl) containerEl.style.display = "none";
     }
   } else if (modo === "grupo") {
     document.getElementById("cadastro-titulo").textContent = "Nomes do Grupo (3-5)";
-    // Mostra o campo do Jogador 3 por padrão no modo grupo
     document.getElementById("campo-jogador3-container").style.display = "flex";
     atualizarVisibilidadeBotaoAddJogador();
   }
 }
 
-
 function atualizarVisibilidadeBotaoAddJogador() {
-  let camposVisiveisContaveis = 0; // Conta J3, J4, J5 que estão com display diferente de none
+  let camposVisiveisContaveis = 0; 
   for (let i = 3; i <= 5; i++) {
     const container = document.getElementById(`campo-jogador${i}-container`);
     if (container && container.style.display !== 'none') {
@@ -708,7 +678,6 @@ function atualizarVisibilidadeBotaoAddJogador() {
     }
   }
 
-  // Total de jogadores (J1, J2 + os opcionais visíveis)
   if ((2 + camposVisiveisContaveis) < 5) {
     document.getElementById("btn-add-jogador").style.display = "inline-block";
   } else {
@@ -717,49 +686,35 @@ function atualizarVisibilidadeBotaoAddJogador() {
 }
 
 function adicionarCampoJogador() {
-  // Tenta mostrar J4, depois J5, se estiverem escondidos. J3 é padrão.
-  for (let i = 4; i <= 5; i++) { // Começa a verificar a partir do jogador 4
+  for (let i = 4; i <= 5; i++) { 
     const container = document.getElementById(`campo-jogador${i}-container`);
     if (container && container.style.display === 'none') {
       container.style.display = "flex";
       const inputField = document.getElementById(`jogador${i}`);
-      if (inputField) inputField.value = ""; // Limpa o campo ao reexibir
-      break; // Adiciona apenas um por vez e sai
+      if (inputField) inputField.value = ""; 
+      break; 
     }
   }
   atualizarVisibilidadeBotaoAddJogador();
 }
 
 function removerCampoJogador(numeroJogadorARemover) {
-  // Permite remover J4 ou J5. Jogador 3 não tem botão de remover.
   if (numeroJogadorARemover < 4 || numeroJogadorARemover > 5) return;
-
   const containerARemover = document.getElementById(`campo-jogador${numeroJogadorARemover}-container`);
   const inputARemover = document.getElementById(`jogador${numeroJogadorARemover}`);
-
-  if (inputARemover) inputARemover.value = ""; // Limpa o valor do campo que está sendo removido
-  if (containerARemover) containerARemover.style.display = "none"; // Esconde o container do jogador removido
-
-  // Lógica de deslocamento: Se J4 foi removido e J5 estava visível, J5 se torna J4
+  if (inputARemover) inputARemover.value = ""; 
+  if (containerARemover) containerARemover.style.display = "none"; 
   if (numeroJogadorARemover === 4) {
     const containerJ5 = document.getElementById("campo-jogador5-container");
     const inputJ5 = document.getElementById("jogador5");
-    const inputJ4 = document.getElementById("jogador4"); // O campo J4 que acabou de ser limpo
-
-    // Verifica se J5 estava visível (style.display !== 'none')
+    const inputJ4 = document.getElementById("jogador4"); 
     if (containerJ5 && inputJ5 && inputJ4 && containerJ5.style.display !== 'none') {
-      // Move o valor de J5 para J4
       inputJ4.value = inputJ5.value;
-      // Mostra o container do J4 (que agora tem o valor do J5)
       document.getElementById("campo-jogador4-container").style.display = "flex";
-
-      // Limpa e esconde o campo J5 (pois seu valor foi movido)
       inputJ5.value = "";
       containerJ5.style.display = "none";
     }
   }
-  // Se J5 foi removido (numeroJogadorARemover === 5), ele simplesmente é escondido. Não há J6 para deslocar.
-
   atualizarVisibilidadeBotaoAddJogador();
 }
 

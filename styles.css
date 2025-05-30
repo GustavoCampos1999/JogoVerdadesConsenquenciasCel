@@ -42,16 +42,15 @@ h2 {
   margin-bottom: 1rem;
 }
 
-/* Estilo global para inputs de texto */
 input[type="text"] {
-  padding: 0.6rem 0.8rem; /* Padding vertical e horizontal padrão */
+  padding: 0.6rem 0.8rem; 
   margin-bottom: 0;
   border: 1px solid #ffaad4;
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   border-radius: 8px;
   font-size: 0.9rem;
-  box-sizing: border-box; /* ESSENCIAL para width + padding correto */
+  box-sizing: border-box; 
   height: 40px;
   line-height: 1.3;
   width: 100%;
@@ -92,84 +91,53 @@ button:disabled {
   box-shadow: none;
 }
 
-/* === SEÇÃO DE CADASTRO DE JOGADORES - LAYOUT CORRIGIDO PARA LARGURA DOS INPUTS === */
 #campos-jogadores {
-  display: grid; /* Cada filho direto será uma linha no grid */
+  display: grid;
   width: 100%;
-  max-width: 330px; /* Define a largura máxima para todas as linhas de jogador */
+  max-width: 330px; 
   margin-left: auto;
   margin-right: auto;
-  row-gap: 0.8rem; /* Espaço entre as linhas de jogador */
+  row-gap: 0.8rem; 
 }
-
-/* Os inputs diretos #jogador1, #jogador2 e os .campo-jogador-container
-   serão filhos deste grid. Todos terão a mesma largura externa (max 330px). */
 
 .campo-jogador-container {
-  width: 100%; /* Ocupa a largura da linha em #campos-jogadores */
-  position: relative; /* Contexto para o botão X posicionado absolutamente */
+  width: 100%; 
+  position: relative; 
 }
 
-/*
-  Para Jogador 1, Jogador 2 (inputs diretos) e Jogador 3 (input dentro de .campo-jogador-container sem .com-remover):
-  A regra global input[type="text"] { width: 100%; } fará com que eles ocupem
-  a largura total de #campos-jogadores (max 330px).
-  O padding padrão (0.6rem 0.8rem) se aplica.
-*/
-
-/* Input para Jogadores 4 e 5 (aqueles com o botão "X") */
 .campo-jogador-container.com-remover input[type="text"] {
-  /* width: 100% e box-sizing: border-box são herdados da regra global.
-     Isso garante que a borda externa deste input tenha a mesma largura que J1, J2, J3. */
-  
-  /* Manter os paddings verticais e o padding esquerdo originais.
-     Aumentar o padding-right para criar uma "zona segura" para o botão X. */
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
   padding-left: 0.8rem;
-  /* O botão X tem 30px de largura.
-     Posicionaremos o botão X a ~5px da borda direita do input.
-     Então, o padding-right precisa ser:
-     largura_do_botão_X (30px) + espaço_da_borda_direita_para_o_botão (5px) + uma_folga_para_o_texto (5px a 10px)
-     Total padding-right = 30px + 5px + 10px = 45px.
-     Isso deve empurrar o texto digitável 45px para longe da borda direita do input.
-  */
   padding-right: 55px;
 }
 
-/* Botão de remover jogador ("X") para Jogadores 4 e 5 */
 .campo-jogador-container.com-remover .btn-remover-jogador {
   position: absolute;
-  /* Posicionar o botão X dentro da área de padding-right do input. */
-  right: -35px; /* A 5px da borda direita do .campo-jogador-container (e do input) */
+  right: -35px; 
   top: 37%;
-  transform: translateY(-50%); /* Centraliza verticalmente */
-  
-  width: 30px;    /* Largura do botão X */
-  height: 30px;   /* Altura do botão X */
-
-  /* Estilos visuais do botão X que você já tem: */
+  transform: translateY(-50%); 
+  width: 30px;
+  height: 30px; 
   background: #e74c3c;
   color: white;
   border: none;
   border-radius: 50%;
-  font-size: 1rem; /* Ajuste se o "X" estiver muito grande/pequeno para o botão */
+  font-size: 1rem; 
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; /* Importante para botões com tamanho fixo */
+  padding: 0; 
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s;
-  margin-left: 0; /* Anula qualquer margin-left: auto que possa ter sido herdada */
+  margin-left: 0; 
 }
 
 .campo-jogador-container.com-remover .btn-remover-jogador:hover {
   background-color: #c0392b;
-  transform: translateY(-50%) scale(1.1); /* Mantém o translateY para evitar saltos */
+  transform: translateY(-50%) scale(1.1); 
 }
-/* === FIM DA SEÇÃO DE CADASTRO DE JOGADORES === */
-
 
 #btn-add-jogador {
   width: auto;
