@@ -50,7 +50,7 @@ function iniciar() {
     const j3Container = document.getElementById("campo-jogador3-container");
 
     if (!j1 || !j2) {
-        alert("Os nomes dos Jogadores 1 e 2 são obrigatórios.");
+        alert("Os nomes dos Jogadores 1, 2 e 3 são obrigatórios.");
         return;
     }
     nomesInputTemp.push(j1, j2);
@@ -103,13 +103,13 @@ function iniciar() {
 function selecionarNivel(nivel) {
   if (nivel === "facil") {
     nivelSelecionado = "facil";
-    emojiNivel = "😄";
+    emojiNivel = "facil";
   } else if (nivel === "medio") {
     nivelSelecionado = "medio";
-    emojiNivel = "🔥";
+    emojiNivel = "medio";
   } else { 
     nivelSelecionado = "dificil";
-    emojiNivel = "😈";
+    emojiNivel = "dificil";
   }
   nivelEscolhidoDisplay.textContent = `Nível: ${emojiNivel}`; 
   document.getElementById("nivel-section").style.display = "none";
