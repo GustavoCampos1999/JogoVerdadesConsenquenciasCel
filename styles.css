@@ -1,69 +1,88 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
 
 body {
   font-family: 'Montserrat', sans-serif;
   background: linear-gradient(135deg, #ff0055, #6600cc);
   color: #fff;
   margin: 0;
-  min-height: 100vh; 
-  padding: 10px; 
+  min-height: 100vh;
+  padding: 10px;
   box-sizing: border-box;
   display: flex;
-  align-items: center; 
-  justify-content: center; 
-  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center;   
+  justify-content: center;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 1rem; 
+  padding: 1rem;
   border-radius: 20px;
   box-shadow: 0 0 15px rgba(255, 0, 100, 0.6);
   text-align: center;
   width: 100%;
-  max-width: 350px; 
-  margin: 0 auto; 
+  max-width: 380px;
+  margin: 0 auto;
 }
 
 h1 {
-  font-size: 1.5rem; 
-  margin-bottom: 0.8rem;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  font-family: 'Quicksand', sans-serif;
 }
 
 h2 {
-  font-size: 1rem; 
+  font-size: 1.1rem;
   color: #ffaad4;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
 }
 
-input {
-  padding: 0.6rem;
-  width: 90%;
-  margin-bottom: 0.6rem;
-  border: none;
+/* Estilo global para inputs de texto */
+input[type="text"] {
+  padding: 0.6rem 0.8rem; /* Padding vertical e horizontal padrão */
+  margin-bottom: 0;
+  border: 1px solid #ffaad4;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
   border-radius: 8px;
   font-size: 0.9rem;
+  box-sizing: border-box; /* ESSENCIAL para width + padding correto */
+  height: 40px;
+  line-height: 1.3;
+  width: 100%;
+}
+
+input[type="text"]::placeholder {
+  color: #ffc4ec;
+  opacity: 0.8;
 }
 
 button {
   background: linear-gradient(135deg, #ff007f, #ff9900);
   color: #fff;
   border: none;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
   border-radius: 10px;
-  margin: 0.3rem;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+  width: 85%;
+  max-width: 300px;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 button:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 0 10px #ffaad4;
+  box-shadow: 0 0 12px #ffaad4;
 }
 
 button:disabled {
@@ -73,128 +92,316 @@ button:disabled {
   box-shadow: none;
 }
 
-.nivel-btns {
+/* === SEÇÃO DE CADASTRO DE JOGADORES - LAYOUT CORRIGIDO PARA LARGURA DOS INPUTS === */
+#campos-jogadores {
+  display: grid; /* Cada filho direto será uma linha no grid */
+  width: 100%;
+  max-width: 330px; /* Define a largura máxima para todas as linhas de jogador */
+  margin-left: auto;
+  margin-right: auto;
+  row-gap: 0.8rem; /* Espaço entre as linhas de jogador */
+}
+
+/* Os inputs diretos #jogador1, #jogador2 e os .campo-jogador-container
+   serão filhos deste grid. Todos terão a mesma largura externa (max 330px). */
+
+.campo-jogador-container {
+  width: 100%; /* Ocupa a largura da linha em #campos-jogadores */
+  position: relative; /* Contexto para o botão X posicionado absolutamente */
+}
+
+/*
+  Para Jogador 1, Jogador 2 (inputs diretos) e Jogador 3 (input dentro de .campo-jogador-container sem .com-remover):
+  A regra global input[type="text"] { width: 100%; } fará com que eles ocupem
+  a largura total de #campos-jogadores (max 330px).
+  O padding padrão (0.6rem 0.8rem) se aplica.
+*/
+
+/* Input para Jogadores 4 e 5 (aqueles com o botão "X") */
+.campo-jogador-container.com-remover input[type="text"] {
+  /* width: 100% e box-sizing: border-box são herdados da regra global.
+     Isso garante que a borda externa deste input tenha a mesma largura que J1, J2, J3. */
+  
+  /* Manter os paddings verticais e o padding esquerdo originais.
+     Aumentar o padding-right para criar uma "zona segura" para o botão X. */
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  padding-left: 0.8rem;
+  /* O botão X tem 30px de largura.
+     Posicionaremos o botão X a ~5px da borda direita do input.
+     Então, o padding-right precisa ser:
+     largura_do_botão_X (30px) + espaço_da_borda_direita_para_o_botão (5px) + uma_folga_para_o_texto (5px a 10px)
+     Total padding-right = 30px + 5px + 10px = 45px.
+     Isso deve empurrar o texto digitável 45px para longe da borda direita do input.
+  */
+  padding-right: 55px;
+}
+
+/* Botão de remover jogador ("X") para Jogadores 4 e 5 */
+.campo-jogador-container.com-remover .btn-remover-jogador {
+  position: absolute;
+  /* Posicionar o botão X dentro da área de padding-right do input. */
+  right: -35px; /* A 5px da borda direita do .campo-jogador-container (e do input) */
+  top: 37%;
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  
+  width: 30px;    /* Largura do botão X */
+  height: 30px;   /* Altura do botão X */
+
+  /* Estilos visuais do botão X que você já tem: */
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1rem; /* Ajuste se o "X" estiver muito grande/pequeno para o botão */
+  font-weight: bold;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 0.5rem; 
-  flex-wrap: wrap;
+  padding: 0; /* Importante para botões com tamanho fixo */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s;
+  margin-left: 0; /* Anula qualquer margin-left: auto que possa ter sido herdada */
+}
+
+.campo-jogador-container.com-remover .btn-remover-jogador:hover {
+  background-color: #c0392b;
+  transform: translateY(-50%) scale(1.1); /* Mantém o translateY para evitar saltos */
+}
+/* === FIM DA SEÇÃO DE CADASTRO DE JOGADORES === */
+
+
+#btn-add-jogador {
+  width: auto;
+  padding: 0.6rem 1.2rem;
+  max-width: 240px;
+  margin-top: 0.8rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
+}
+
+.botoes-acao-cadastro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  width: 100%;
+}
+
+.botoes-acao-cadastro .btn-principal-acao {
+  width: 90%;
+  max-width: 280px;
+}
+
+.btn-principal-acao {
+  padding: 0.9rem 1.8rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.botoes-acao-cadastro .btn-secundario-acao,
+.botoes-acao-tela .btn-voltar-tela,
+#btn-voltar-discreto,
+#modo-verdade-section #btn-voltar {
+  background: linear-gradient(135deg, #868e96, #5a6268);
+  color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.85rem;
+  width: auto;
+  min-width: 80px;
+  max-width: 170px;
+  height: auto;
+  line-height: 1.4;
+  border: none;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
+}
+
+.botoes-acao-cadastro .btn-secundario-acao:hover:not(:disabled),
+.botoes-acao-tela .btn-voltar-tela:hover:not(:disabled),
+#btn-voltar-discreto:hover:not(:disabled),
+#modo-verdade-section #btn-voltar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6268, #495057);
+  box-shadow: 0 0 8px #adb5bd;
+  transform: scale(1.03);
+}
+
+#btn-voltar-discreto {
+  max-width: 130px;
+}
+
+.nivel-btns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 
 .nivel-btns button {
-  width: 25%;
-  height: 60px; 
-  font-size: 2rem; 
-  background-color: #fff;
-  color: #000;
-  border: 2px solid #ff007f;
+  padding: 0.8rem 0.5rem;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #ff007f, #e68a00);
+  color: #fff;
+  border: none;
   border-radius: 10px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+}
+
+.nivel-btns button[onclick*="ativarModoSoVerdade"] {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.nivel-btns button:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 #vez-do-jogador {
   font-weight: bold;
   color: #ffc4ec;
-  margin: 0.3rem 0; 
-  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  font-size: 1rem;
 }
 
-#resultado, #mensagem, #placar {
- margin-top: 0.3rem; 
+#resultado,
+#mensagem,
+#placar {
+  margin-top: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
   color: #ffe6f7;
-  min-height: 30px; 
+  min-height: 30px;
+  padding: 0 0.5rem;
+  word-wrap: break-word;
 }
 
 #resultado {
   font-size: 1.1rem;
+  min-height: 40px;
 }
 
 #resultado.prenda {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   color: yellow;
   font-weight: bold;
+}
+
+#avaliacao {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width:100%;
 }
 
 #avaliacao button {
   width: 45%;
   font-size: 0.9rem;
+  padding: 0.7rem 1rem;
+  max-width: 150px;
 }
 
 #btn-roleta {
-  font-size: 1rem;
-  margin-top: 10px;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  padding: 0.9rem 1.8rem;
 }
+
 #animacao-resultado {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex; 
-  justify-content: center; 
-  align-items: center;   
-  text-align: center; 
-  font-size: 2.5rem; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 2rem;
   font-weight: bold;
-  padding: 1rem 2rem; 
-  border-radius: 20px;
-  min-width: 200px;  
-  min-height: 80px; 
-  box-sizing: border-box; 
-  z-index: 9999; 
-  margin: 0; 
+  padding: 1rem 1.8rem;
+  border-radius: 15px;
+  min-width: 180px;
+  min-height: 70px;
+  box-sizing: border-box;
+  z-index: 9999;
+  margin: 0;
+  text-shadow: none;
 }
 
 .animacao-verdade {
-    color: #fff;
+  color: #fff;
   background-color: #00ff99;
-  border: 3px solid #00ff99; 
-  box-shadow: 0 0 20px #00ff99, 0 0 40px #00ff99;
+  border: 3px solid #00ff99;
+  box-shadow: 0 0 8px #00ff99, 0 0 20px #00ff99;
   animation: pulse-neon-verde 1.2s infinite alternate;
+  text-shadow: none;
 }
 
 .animacao-consequencia {
   color: #fff;
-  background-color: #ff1744; 
-  border: 3px solid #ff1744; 
-  box-shadow: 0 0 20px #ff1744, 0 0 40px #ff1744; 
-  animation: pulse-neon-vermelho 1.2s infinite alternate; 
+  background-color: #ff1744;
+  border: 3px solid #ff1744;
+  box-shadow: 0 0 8px #ff1744, 0 0 20px #ff1744;
+  animation: pulse-neon-vermelho 1.2s infinite alternate;
+  text-shadow: none;
 }
 
-@keyframes pulse-neon-vermelho { 
+@keyframes pulse-neon-vermelho {
   0% {
-    box-shadow: 0 0 10px #ff1744, 0 0 20px #ff1744; 
-    transform: translate(-50%, -50%) scale(1); 
+    box-shadow: 0 0 5px #ff1744, 0 0 12px #ff1744;
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
-    box-shadow: 0 0 25px #ff4d6d, 0 0 60px #ff4d6d;   
-    transform: translate(-50%, -50%) scale(1.05); 
+    box-shadow: 0 0 12px #ff4d6d, 0 0 30px #ff4d6d;
+    transform: translate(-50%, -50%) scale(1.05);
   }
 }
 
 @keyframes pulse-neon-verde {
   0% {
-    box-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
-    transform: translate(-50%, -50%) scale(1); 
+    box-shadow: 0 0 5px #00ff99, 0 0 12px #00ff99;
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
-    box-shadow: 0 0 25px #00ffaa, 0 0 60px #00ffaa;
-    transform: translate(-50%, -50%) scale(1.05); 
+    box-shadow: 0 0 12px #00ffaa, 0 0 30px #00ffaa;
+    transform: translate(-50%, -50%) scale(1.05);
   }
 }
 
 .animacao-prenda {
-   color: #000;
+  color: #000;
   background-color: yellow;
-  box-shadow: 0 0 20px yellow;
+  box-shadow: 0 0 8px yellow, 0 0 18px yellow;
+  animation: pulse-neon-amarelo 1.2s infinite alternate;
+  text-shadow: none;
 }
 
+@keyframes pulse-neon-amarelo {
+  0% {
+    box-shadow: 0 0 5px yellow, 0 0 10px yellow;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    box-shadow: 0 0 10px #fff000, 0 0 25px #fff000;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
 
 .hidden {
   display: none !important;
 }
 
 .creditos {
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 0.75rem;
   color: #ffaad4;
   text-align: center;
@@ -203,7 +410,7 @@ button:disabled {
 }
 
 .mensagem-vitoria {
-  font-size: 2.2rem !important;
+  font-size: 1.8rem !important;
   font-weight: bold;
   background: linear-gradient(90deg, #ff4081, #ffc107, #8bc34a, #00bcd4);
   background-size: 400% 100%;
@@ -212,7 +419,7 @@ button:disabled {
   -webkit-text-fill-color: transparent;
   animation: brilhar 3s linear infinite;
   text-align: center;
-  margin: 10px 0;
+  margin: 15px 0;
 }
 
 @keyframes brilhar {
@@ -227,42 +434,12 @@ button:disabled {
   }
 }
 
-@media (max-width: 600px) {
-  .escolha-container {
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.opcao {
-  width: 100%;
-  max-width: 100%;
-}
-
-  .nivel-btns button {
-    width: 70%;
-    height: 50px;
-    font-size: 1.8rem;
-  }
-
- button {
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 8px;
-}
-
-  #avaliacao button {
-    width: 100%;
-    margin-bottom: 8px;
-  }
-}
-
-
 .escolha-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin: 1rem auto;
+  margin: 1.2rem auto;
   flex-wrap: wrap;
   width: 100%;
   max-width: 100%;
@@ -271,95 +448,81 @@ button:disabled {
 
 .opcao {
   flex: 1 1 45%;
-  max-width: 140px;
+  max-width: 150px;
   padding: 1rem 1rem;
   border-radius: 12px;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: default;
   text-align: center;
   color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 #opcao-verdade {
-  background-color: #00ff7f; 
-  box-shadow: 0 0 20px #00ff7f;
+  background-color: #00ff7f;
+  box-shadow: 0 0 15px #00dd6f;
 }
 
 #opcao-consequencia {
-  background-color: #ff1744; 
-  box-shadow: 0 0 20px #ff1744;
+  background-color: #ff1744;
+  box-shadow: 0 0 15px #dd1030;
 }
 
 .piscar {
   color: #fff;
-  text-shadow: 
-    0 0 5px #fff,
-    0 0 10px #ff00cc,
-    0 0 20px #ff00cc,
-    0 0 40px #ff00cc;
+  text-shadow: 0 0 7px rgba(255, 255, 255, 0.7);
   font-weight: bold;
-}
-
-@keyframes neonPiscar {
-  from {
-    opacity: 0.3;
-    text-shadow: none;
-  }
-  to {
-    opacity: 1;
-    text-shadow:
-      0 0 5px #fff,
-      0 0 10px #ff00cc,
-      0 0 20px #ff00cc,
-      0 0 40px #ff00cc;
-  }
 }
 
 .opcao.piscar#opcao-verdade {
   animation: piscar-verde 0.3s alternate infinite;
+  text-shadow: none !important;
 }
 
 .opcao.piscar#opcao-consequencia {
   animation: piscar-vermelho 0.3s alternate infinite;
+  text-shadow: none !important;
 }
 
 @keyframes piscar-verde {
-  0%   { 
+  0% {
     box-shadow: 0 0 20px #00ff7f;
-    transform: scale(1); 
+    transform: scale(1);
   }
-  50%  { 
-    box-shadow: 0 0 45px #00ff7f; 
-    transform: scale(1.08); 
+  50% {
+    box-shadow: 0 0 40px #00ff7f, 0 0 10px #fff;
+    transform: scale(1.08);
   }
-  100% { 
-    box-shadow: 0 0 40px #00ff7f; 
-    transform: scale(1.04);  
+  100% {
+    box-shadow: 0 0 20px #00ff7f;
+    transform: scale(1.04);
   }
 }
 
 @keyframes piscar-vermelho {
-  0%   { 
+  0% {
     box-shadow: 0 0 20px #ff1744;
-    transform: scale(1); 
+    transform: scale(1);
   }
-  50%  { 
-    box-shadow: 0 0 45px #ff1744; 
-    transform: scale(1.08); 
+  50% {
+    box-shadow: 0 0 40px #ff1744, 0 0 10px #fff;
+    transform: scale(1.08);
   }
-  100% { 
-    box-shadow: 0 0 40px #ff1744; 
-    transform: scale(1.04); 
+  100% {
+    box-shadow: 0 0 20px #ff1744;
+    transform: scale(1.04);
   }
 }
 
 #modo-verdade-section {
-  padding: 1rem;
+  padding: 1.5rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  width: 90%;
+  max-width: 350px;
+  box-sizing: border-box;
 }
 
 #vez-simples {
@@ -374,27 +537,130 @@ button:disabled {
   color: #fff;
   min-height: 60px;
   margin: 15px 0;
+  line-height: 1.5;
 }
 
 .buscando {
-  animation: piscar 1s infinite alternate;
+  animation: piscar-texto 1s infinite alternate;
   font-style: italic;
   color: yellow;
 }
 
-@keyframes piscar {
+@keyframes piscar-texto {
   0% { opacity: 0.4; }
   100% { opacity: 1; }
 }
 
-@keyframes pulse-green {
-  0% { transform: scale(1); background-color: #4caf50; }
-  50% { transform: scale(1.2); background-color: #66bb6a; }
-  100% { transform: scale(1); background-color: #4caf50; }
+#modo-jogo-section h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: #ffe6f7;
 }
 
-@keyframes pulse-red {
-  0% { transform: scale(1); background-color: #e91e63; }
-  50% { transform: scale(1.2); background-color: #f06292; }
-  100% { transform: scale(1); background-color: #e91e63; }
+.modo-jogo-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.modo-jogo-btns button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  width: 90%;
+  max-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+#cadastro-section h2 {
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+  color: #ffe6f7;
+}
+
+.botoes-acao-tela {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.2rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0.8rem;
+    max-width: 95%;
+  }
+  h1 {
+    font-size: 1.4rem;
+  }
+  h2 {
+    font-size: 1rem;
+  }
+  button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .btn-principal-acao {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .botoes-acao-cadastro .btn-secundario-acao,
+  .botoes-acao-tela .btn-voltar-tela,
+  #btn-voltar-discreto,
+  #modo-verdade-section #btn-voltar {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    max-width: 150px;
+  }
+  #btn-voltar-discreto {
+      max-width: 110px;
+  }
+
+  .nivel-btns {
+    gap: 0.5rem;
+  }
+  .nivel-btns button {
+    font-size: 0.85rem;
+    height: 55px;
+    padding: 0.6rem 0.4rem;
+  }
+  .escolha-container {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 1rem auto;
+  }
+  .opcao {
+    width: 80%;
+    max-width: 200px;
+    font-size: 1.1rem;
+  }
+  #avaliacao {
+    flex-direction: column;
+    align-items: center;
+  }
+  #avaliacao button {
+    width: 80%;
+    max-width: 250px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
+  }
+  #btn-roleta {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+  #animacao-resultado {
+    font-size: 1.8rem;
+    padding: 0.8rem 1.5rem;
+  }
+  .mensagem-vitoria {
+    font-size: 1.6rem !important;
+  }
 }

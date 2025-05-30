@@ -1,4 +1,5 @@
 const perguntas = {
+  dupla: {
   facil: {
     verdade: [  "já imaginou me provocando até eu não aguentar mais?",
   "se eu te pedisse um beijo agora, o que faria?",
@@ -478,6 +479,7 @@ const perguntas = {
     ]
 
   },
+  
   dificil: {
     verdade: ["qual a sua maior fantasia sexual comigo que ainda não realizou?", 
         "você já se masturbou pensando em mim? como foi?",
@@ -884,5 +886,30 @@ const perguntas = {
 "deixe te provocar com mordidas e lambidas pelo corpo.",
 "fique nu(a) e deixe te provocar com um objeto gelado.",,
     ]
+  }
+},
+
+grupo: {
+  facil: {
+    verdade: [
+
+    ],
+    consequencia: [
+
+    ]},
+    medio:{
+      verdade: [
+
+    ],
+    consequencia: [
+
+    ]},
+    dificil: {
+      verdade: [
+
+    ],
+    consequencia: [
+
+    ]}
   }
 };
