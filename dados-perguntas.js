@@ -941,7 +941,7 @@ const perguntas = {
       "qual seria seu cenário perfeito para um encontro picante?"
     ],
 
-    consequencia: ["me dê um abraço bem apertado.",  
+    consequência: ["me dê um abraço bem apertado.",  
       "me dê um abraço que transmita carinho e segurança.",
       "me faça uma massagem nos pés por 1 minuto, com carinho.",
 "cante um trecho da sua música favorita para mim, olhando nos meus olhos.",
@@ -2072,7 +2072,7 @@ const perguntas = {
 "você já se arrependeu de ter mandado uma foto íntima?"
     ],
 
-    consequencia: ["fale no meu ouvido, com detalhes, o que quer que eu faça com você agora.", 
+    consequência: ["fale no meu ouvido, com detalhes, o que quer que eu faça com você agora.", 
       "simule como começaria a me despir se estivéssemos sozinhos", 
        "fale no meu ouvido, com detalhes explícitos, o que você quer que eu faça com você agora, sem hesitar.",
   "simule como começaria a me despir se estivéssemos sozinhos, com cada peça caindo lentamente e um olhar de luxúria.",
@@ -2777,7 +2777,7 @@ const perguntas = {
 "você já fez sexo em um elevador com risco real de ser pego?",
 "você toparia receber ordens sexuais de um(a) desconhecido(a)?"
     ],
-    consequencia: ["simule me despir, lentamente, começando por onde quiser.", 
+    consequência: ["simule me despir, lentamente, começando por onde quiser.", 
       "diga no meu ouvido, sem pudor, o que mais quer que eu faça na cama.",
       "simule me despir, lentamente, peça por peça, com um olhar de desejo intenso.",
 "diga no meu ouvido, sem pudor e com a voz rouca, o que você faria comigo agora na cama.",
@@ -3748,7 +3748,7 @@ grupo: {
 "já pensou em mudar seu visual para atrair alguém?",
 "qual seria seu cenário perfeito para um encontro picante?"
     ],
-    consequencia: ["dê um abraço bem apertado em outro jogador.",
+    consequência: ["dê um abraço bem apertado em outro jogador.",
 "fale um elogio sincero para outro jogador.",
 "sussurre no ouvido de outro jogador o que mais gostaria de fazer com ele agora.",
 "encoste sua boca bem próxima da boca de outro jogador, mas não beije.",
@@ -4403,7 +4403,7 @@ grupo: {
 "você já mandou nudes para a pessoa errada?",
 "você já se arrependeu de ter mandado uma foto íntima?",
     ],
-    consequencia: ["fale no ouvido de um dos jogadores, com detalhes, o que quer que ele faça com você agora.",
+    consequência: ["fale no ouvido de um dos jogadores, com detalhes, o que quer que ele faça com você agora.",
 "simule como começaria a despir um dos jogadores se estivessem sozinhos.",
 "sussurre no ouvido de um jogador à sua escolha, com detalhes explícitos, o que você quer que ele(a) faça com você agora, sem censura e sem hesitação.",
 "simule como começaria a despir um jogador à sua escolha, com cada peça caindo lentamente e um olhar de luxúria insaciável.",
@@ -5206,7 +5206,7 @@ grupo: {
 "você já fez sexo em um elevador com risco real de ser pego?",
 "você toparia receber ordens sexuais de um(a) desconhecido(a)?",
     ],
-    consequencia: ["simule despir um dos jogadores, lentamente, começando por onde quiser.",
+    consequência: ["simule despir um dos jogadores, lentamente, começando por onde quiser.",
 "diga no ouvido de um dos jogadores, sem pudor, o que mais quer que ele faça na cama.",
 "morda um dos jogadores em um lugar estratégico, sem machucar, mas deixando com vontade.",
 "simule um movimento íntimo, como se estivessem sozinhos com um dos jogadores, só para provocá-lo.",
