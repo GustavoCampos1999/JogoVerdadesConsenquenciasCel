@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Verdade ou Consequência</h1>
+        <h1>V ou C</h1>
 
         <section id="modo-jogo-section">
             <h2>Como você quer jogar?</h2>
@@ -19,6 +19,7 @@
             </div>
             <div class="creditos">
                 Criado por Gustavo Campos<br>
+                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
             </div>
         </section>
 
@@ -46,6 +47,7 @@
             </div>
             <div class="creditos">
                 Criado por Gustavo Campos<br>
+                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
             </div>
         </section>
 
@@ -62,6 +64,7 @@
             </div>
             <div class="creditos">
                 Criado por Gustavo Campos<br>
+                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
             </div>
         </section>
 
@@ -70,25 +73,28 @@
             <div id="vez-do-jogador"></div>
 
             <div id="escolha-container" style="display: none;" class="escolha-container">
-                <div class="opcao" id="opcao-verdade">Verdade</div>
-                <div class="opcao" id="opcao-consequencia">Consequência</div>
+                <div class="opcao" id="opcao-verdade">V</div>
+                <div class="opcao" id="opcao-consequencia">C</div>
             </div>
             
             <div id="mensagem" class="mensagem"></div>
             <div id="resultado" class="resultado"></div>
 
-            <div id="avaliacao" style="display:none;"> <button id="btn-cumpriu">Cumpriu</button>
+            <div id="avaliacao" style="display:none;">
+                <button id="btn-cumpriu">Cumpriu</button>
                 <button id="btn-nao-cumpriu">Não Cumpriu</button>
             </div>
 
-            <div id="placar" class="placar"></div>
-
             <div class="controles-rodada-acao"> 
-                <button id="btn-roleta" class="btn" style="display: none;">Sortear</button> <button id="btn-continuar-jogo" class="btn btn-secundario" style="display: none;">Continuar Jogo</button>
+                <button id="btn-roleta" class="btn" style="display: none;">Sortear</button>
+                <button id="btn-continuar-jogo" class="btn btn-secundario" style="display: none;">Continuar Jogo</button>
             </div>
 
-            <button id="btn-voltar-discreto" class="btn-link" onclick="voltarParaSelecaoDeNivel()" style="display:none;">↩ Níveis</button> <div class="creditos">
+            <div id="placar" class="placar"></div>
+            <button id="btn-voltar-discreto" class="btn-link" onclick="voltarParaSelecaoDeNivel()" style="display:none;">↩ Níveis</button>
+            <div class="creditos">
                 Criado por Gustavo Campos<br>
+                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
             </div>
         </section>
 
@@ -104,6 +110,22 @@
         <button id="btn-reiniciar" style="display: none;" onclick="reiniciarJogo()">Jogar novamente</button>
     </div>
 
+    <div id="pix-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <button class="popup-close" onclick="fecharPixPopup()">X</button>
+            <h2>Apoie o Desenvolvedor</h2>
+            <p>Gostou do jogo? Considere uma doação via PIX para comprar aquele cafézinho.</p>
+            
+            <img src="imagens/qr-code-pix.png" alt="QR Code PIX" id="pix-qr-code" style="max-width:150px; border-radius: 8px; margin-bottom: 10px;">
+            
+            <p style="margin-bottom: 5px;"><strong>Chave PIX (e-mail):</strong></p>
+            <div class="pix-key-container">
+                <input type="text" value="zaroslend10@gmail.com" id="pix-key" readonly>
+                <button onclick="copiarChavePix()">Copiar</button>
+            </div>
+            <p id="copy-feedback" class="copy-feedback"></p>
+        </div>
+    </div>
     <script src="dados-prendas.js"></script> 
     <script src="dados-perguntas.js"></script> 
     <script src="script.js"></script>
