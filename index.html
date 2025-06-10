@@ -1,133 +1,141 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>V & C</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>V & C</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>V ou C</h1>
+  <div class="container">
+    <h1>V</h1>
 
-        <section id="modo-jogo-section">
-            <h2>Como você quer jogar?</h2>
-            <div class="modo-jogo-btns">
-                <button onclick="selecionarModoDeJogo('dupla')">2 jogadores</button>
-                <button onclick="selecionarModoDeJogo('grupo')">3-5 jogadores</button>
-            </div>
-            <div class="creditos">
-                Criado por Gustavo Campos<br>
-                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
-            </div>
-        </section>
+    <section id="modo-jogo-section">
+      <h2>Como você quer jogar?</h2>
+      <div class="modo-jogo-btns">
+        <button onclick="selecionarModoDeJogo('dupla')">2 jogadores</button>
+        <button onclick="selecionarModoDeJogo('grupo')">3-5 jogadores</button>
+      </div>
+      <div class="creditos">
+        Criado por Gustavo Campos<br>
+        <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
+      </div>
+    </section>
 
-        <section id="cadastro-section" style="display:none;">
-            <h2 id="cadastro-titulo">Quem vai jogar?</h2>
-            <div id="campos-jogadores">
-                <input type="text" id="jogador1" placeholder="Jogador 1" />
-                <input type="text" id="jogador2" placeholder="Jogador 2" />
-                <div class="campo-jogador-container" id="campo-jogador3-container" style="display:none;">
-                    <input type="text" id="jogador3" placeholder="Jogador 3" />
-                </div>
-                <div class="campo-jogador-container com-remover" id="campo-jogador4-container" style="display:none;">
-                    <input type="text" id="jogador4" placeholder="Jogador 4" />
-                    <button type="button" class="btn-remover-jogador" onclick="removerCampoJogador(4)">X</button>
-                </div>
-                <div class="campo-jogador-container com-remover" id="campo-jogador5-container" style="display:none;">
-                    <input type="text" id="jogador5" placeholder="Jogador 5" />
-                    <button type="button" class="btn-remover-jogador" onclick="removerCampoJogador(5)">X</button>
-                </div>
-            </div>
-            <button id="btn-add-jogador" onclick="adicionarCampoJogador()" style="display:none;">+ Adicionar Jogador</button>
-            <div class="botoes-acao-cadastro">
-                <button class="btn-principal-acao" onclick="iniciar()">Começar</button> 
-                <button class="btn-voltar-tela btn-secundario-acao" onclick="voltarParaSelecaoModo()">↩ Voltar</button>
-            </div>
-            <div class="creditos">
-                Criado por Gustavo Campos<br>
-                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
-            </div>
-        </section>
-
-        <section id="nivel-section" style="display:none;">
-            <h2>Escolha o Nível</h2>
-            <div class="nivel-btns">
-                <button onclick="selecionarNivel('facil')" aria-label="Nível fácil">Fácil</button>
-                <button onclick="selecionarNivel('medio')" aria-label="Nível médio">Médio</button>
-                <button onclick="selecionarNivel('dificil')" aria-label="Nível difícil">Díficil</button>
-                <button onclick="ativarModoSoVerdade()" aria-label="Modo só verdade">Verdades</button>
-            </div>
-            <div class="botoes-acao-tela">
-                <button class="btn-voltar-tela" onclick="voltarParaCadastroJogadores()">↩ Voltar</button>
-            </div>
-            <div class="creditos">
-                Criado por Gustavo Campos<br>
-                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
-            </div>
-        </section>
-
-        <section id="jogo-section" style="display:none;">
-            <div id="nivel-escolhido"></div>
-            <div id="vez-do-jogador"></div>
-
-            <div id="escolha-container" style="display: none;" class="escolha-container">
-                <div class="opcao" id="opcao-verdade">V</div>
-                <div class="opcao" id="opcao-consequencia">C</div>
-            </div>
-            
-            <div id="mensagem" class="mensagem"></div>
-            <div id="resultado" class="resultado"></div>
-
-            <div id="avaliacao" style="display:none;">
-                <button id="btn-cumpriu">Cumpriu</button>
-                <button id="btn-nao-cumpriu">Não Cumpriu</button>
-            </div>
-
-            <div class="controles-rodada-acao"> 
-                <button id="btn-roleta" class="btn" style="display: none;">Sortear</button>
-                <button id="btn-continuar-jogo" class="btn btn-secundario" style="display: none;">Continuar Jogo</button>
-            </div>
-
-            <div id="placar" class="placar"></div>
-            <button id="btn-voltar-discreto" class="btn-link" onclick="voltarParaSelecaoDeNivel()" style="display:none;">↩ Níveis</button>
-            <div class="creditos">
-                Criado por Gustavo Campos<br>
-                <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Buy me a coffee</button>
-            </div>
-        </section>
-
-        <div id="animacao-resultado" class="animacao-resultado hidden"></div>
-
-        <section id="modo-verdade-section" style="display:none;">
-            <div id="vez-simples"></div>
-            <div id="pergunta-simples"></div>
-            <button id="btn-sortear-verdade" onclick="sortearVerdadeSimples()">Sortear Verdade</button>
-            <button id="btn-voltar" onclick="voltarParaNiveis()">Voltar</button>
-        </section>
-        
-        <button id="btn-reiniciar" style="display: none;" onclick="reiniciarJogo()">Jogar novamente</button>
-    </div>
-
-    <div id="pix-popup" class="popup-overlay hidden">
-        <div class="popup-content">
-            <button class="popup-close" onclick="fecharPixPopup()">X</button>
-            <h2>Apoie o Desenvolvedor</h2>
-            <p>Gostou do jogo? Considere uma doação via PIX para comprar aquele cafézinho.</p>
-            
-            <img src="imagens/qr-code-pix.png" alt="QR Code PIX" id="pix-qr-code" style="max-width:150px; border-radius: 8px; margin-bottom: 10px;">
-            
-            <p style="margin-bottom: 5px;"><strong>Chave PIX (e-mail):</strong></p>
-            <div class="pix-key-container">
-                <input type="text" value="zaroslend10@gmail.com" id="pix-key" readonly>
-                <button onclick="copiarChavePix()">Copiar</button>
-            </div>
-            <p id="copy-feedback" class="copy-feedback"></p>
+    <section id="cadastro-section" style="display:none;">
+      <h2 id="cadastro-titulo">Quem vai jogar?</h2>
+      <div id="campos-jogadores">
+        <input type="text" id="jogador1" placeholder="Jogador 1" />
+        <input type="text" id="jogador2" placeholder="Jogador 2" />
+        <div class="campo-jogador-container" id="campo-jogador3-container" style="display:none;">
+          <input type="text" id="jogador3" placeholder="Jogador 3" />
         </div>
+        <div class="campo-jogador-container com-remover" id="campo-jogador4-container" style="display:none;">
+          <input type="text" id="jogador4" placeholder="Jogador 4" />
+          <button type="button" class="btn-remover-jogador" onclick="removerCampoJogador(4)">X</button>
+        </div>
+        <div class="campo-jogador-container com-remover" id="campo-jogador5-container" style="display:none;">
+          <input type="text" id="jogador5" placeholder="Jogador 5" />
+          <button type="button" class="btn-remover-jogador" onclick="removerCampoJogador(5)">X</button>
+        </div>
+      </div>
+      <button id="btn-add-jogador" onclick="adicionarCampoJogador()" style="display:none;">+ Adicionar Jogador</button>
+      <div class="botoes-acao-cadastro">
+        <button class="btn-principal-acao" onclick="iniciar()">Começar</button> 
+        <button class="btn-voltar-tela btn-secundario-acao" onclick="voltarParaSelecaoModo()">↩ Voltar</button>
+      </div>
+      <div class="creditos">
+        Criado por Gustavo Campos<br>
+        <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
+      </div>
+    </section>
+
+    <section id="nivel-section" style="display:none;">
+      <h2>Escolha o Nível</h2>
+      <div class="nivel-btns">
+        <button onclick="selecionarNivel('facil')" aria-label="Nível fácil">Fácil</button>
+        <button onclick="selecionarNivel('medio')" aria-label="Nível médio">Médio</button>
+        <button onclick="selecionarNivel('dificil')" aria-label="Nível difícil">Díficil</button>
+        <button onclick="ativarModoSoVerdade()" aria-label="Modo só verdade">Verdades</button>
+      </div>
+      <div class="botoes-acao-tela">
+        <button class="btn-voltar-tela" onclick="voltarParaCadastroJogadores()">↩ Voltar</button>
+      </div>
+      <div class="creditos">
+        Criado por Gustavo Campos<br>
+        <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
+      </div>
+    </section>
+
+    <section id="jogo-section" style="display:none;">
+      <div id="nivel-escolhido"></div>
+      <div id="vez-do-jogador"></div>
+
+      <div id="escolha-container" style="display: none;" class="escolha-container">
+        <div class="opcao" id="opcao-verdade">V</div>
+        <div class="opcao" id="opcao-consequencia">C</div>
+      </div>
+      
+      <div id="mensagem" class="mensagem"></div>
+      <div id="resultado" class="resultado"></div>
+
+      <div id="avaliacao" style="display:none;">
+        <button id="btn-cumpriu">Cumpriu</button>
+        <button id="btn-nao-cumpriu">Não Cumpriu</button>
+      </div>
+
+      <div class="controles-rodada-acao"> 
+        <button id="btn-roleta" class="btn" style="display: none;">Sortear</button>
+        <button id="btn-continuar-jogo" class="btn btn-secundario" style="display: none;">Continuar Jogo</button>
+      </div>
+
+      <div id="placar" class="placar"></div>
+
+      <div id="desafio-nivel-section" style="display:none;">
+        <h3>🔥 Desafio Especial! 🔥</h3>
+        <p id="desafio-nivel-texto"></p>
+        <div id="respostas-jogadores-desafio"></div>
+        <button id="btn-confirmar-votos-desafio" class="btn" style="display: none;">Confirmar Votos</button>
+      </div>
+
+      <button id="btn-voltar-discreto" class="btn-link" onclick="voltarParaSelecaoDeNivel()" style="display:none;">↩ Níveis</button>
+      <div class="creditos">
+        Criado por Gustavo Campos<br>
+        <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
+      </div>
+    </section>
+    
+    <div id="animacao-resultado" class="animacao-resultado hidden"><span></span></div>
+
+    <section id="modo-verdade-section" style="display:none;">
+      <div id="vez-simples"></div>
+      <div id="pergunta-simples"></div>
+      <button id="btn-sortear-verdade" onclick="sortearVerdadeSimples()">Sortear Verdade</button>
+      <button id="btn-voltar" onclick="voltarParaNiveis()">Voltar</button>
+    </section>
+    
+    <button id="btn-reiniciar" style="display: none;" onclick="reiniciarJogo()">Jogar novamente</button>
+  </div>
+
+  <div id="pix-popup" class="popup-overlay hidden">
+    <div class="popup-content">
+      <button class="popup-close" onclick="fecharPixPopup()">X</button>
+      <h2>❤️ Apoie o Desenvolvedor ❤️</h2>
+      <p>Gostou do jogo? Considere uma doação via PIX para comprar aquele cafézinho.</p>
+      
+      <img src="imagens/qr-code-pix.png" alt="QR Code PIX" id="pix-qr-code" style="max-width:150px; border-radius: 8px; margin-bottom: 10px;">
+      
+      <p style="margin-bottom: 5px;"><strong>Chave PIX (E-Mail):</strong></p>
+      <div class="pix-key-container">
+        <input type="text" value="zaroslend10@gmail.com" id="pix-key" readonly>
+        <button onclick="copiarChavePix()">Copiar</button>
+      </div>
+      <p id="copy-feedback" class="copy-feedback"></p>
     </div>
-    <script src="dados-prendas.js"></script> 
-    <script src="dados-perguntas.js"></script> 
-    <script src="script.js"></script>
+  </div>
+  <script src="dados-prendas.js"></script> 
+  <script src="dados-perguntas.js"></script> 
+  <script src="script.js"></script>
 </body>
 </html>

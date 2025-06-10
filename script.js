@@ -8,6 +8,8 @@ let ultimaEscolha = "";
 let emojiNivel = "";
 let aguardandoPrenda = false;
 let modoJogo = "";
+let girando = false;
+
 window.perguntasCurtidas = window.perguntasCurtidas || [];
 window.perguntasNaoCurtidas = window.perguntasNaoCurtidas || [];
 
@@ -18,867 +20,782 @@ const avaliacao = document.getElementById("avaliacao");
 const vezDoJogador = document.getElementById("vez-do-jogador");
 const nivelEscolhidoDisplay = document.getElementById("nivel-escolhido");
 const placar = document.getElementById("placar");
+
 const limitesPontuacao = {
-  facil: 5,
-  medio: 5,
-  dificil: 5,
+    facil: 5,
+    medio: 5,
+    dificil: 5,
 };
 
 const segmentos = [{ texto: "Verdade" }, { texto: "Consequência" }];
 
-let girando = false;
+function selecionarModoDeJogo(modo) {
+    modoJogo = modo;
+    document.getElementById("modo-jogo-section").style.display = "none";
+    document.getElementById("cadastro-section").style.display = "block";
+
+    for (let i = 1; i <= 5; i++) {
+        const inputEl = document.getElementById(`jogador${i}`);
+        if (inputEl) inputEl.value = "";
+        if (i >= 3) {
+            const containerEl = document.getElementById(`campo-jogador${i}-container`);
+            if (containerEl) containerEl.style.display = "none";
+        }
+    }
+
+    if (modo === "dupla") {
+        document.getElementById("cadastro-titulo").textContent = "Nomes da Dupla";
+        document.getElementById("btn-add-jogador").style.display = "none";
+    } else if (modo === "grupo") {
+        document.getElementById("cadastro-titulo").textContent = "Nomes do Grupo (3-5)";
+        document.getElementById("campo-jogador3-container").style.display = "flex";
+        atualizarVisibilidadeBotaoAddJogador();
+    }
+}
 
 function iniciar() {
-  jogadores = [];
-  const nomesInputTemp = [];
+    jogadores = [];
+    const nomesInputTemp = [];
 
-  if (modoJogo === "dupla") {
-    const j1 = document.getElementById("jogador1").value.trim();
-    const j2 = document.getElementById("jogador2").value.trim();
-    if (!j1 || !j2) {
-      alert("Digite o nome dos dois jogadores.");
-      return;
-    }
-    nomesInputTemp.push(j1, j2);
-  } else if (modoJogo === "grupo") {
-    const j1 = document.getElementById("jogador1").value.trim();
-    const j2 = document.getElementById("jogador2").value.trim();
-    const j3Input = document.getElementById("jogador3");
-    const j3Container = document.getElementById("campo-jogador3-container");
+    if (modoJogo === "dupla") {
+        const j1 = document.getElementById("jogador1").value.trim();
+        const j2 = document.getElementById("jogador2").value.trim();
+        if (!j1 || !j2) {
+            alert("Digite o nome dos dois jogadores.");
+            return;
+        }
+        nomesInputTemp.push(j1, j2);
+    } else if (modoJogo === "grupo") {
+        for (let i = 1; i <= 5; i++) {
+            const input = document.getElementById(`jogador${i}`);
+            const container = document.getElementById(`campo-jogador${i}-container`);
+            const isVisible = i <= 2 || (container && container.style.display !== 'none');
 
-    if (!j1 || !j2) {
-      alert("Os nomes dos Jogadores 1, 2 e 3 são obrigatórios.");
-      return;
-    }
-    nomesInputTemp.push(j1, j2);
+            if (isVisible) {
+                const nome = input.value.trim();
+                if (!nome) {
+                     alert(`O nome do Jogador ${i} é obrigatório.`);
+                     return;
+                }
+                nomesInputTemp.push(nome);
+            }
+        }
+        if (nomesInputTemp.length < 3) {
+            alert("São necessários pelo menos 3 jogadores para o modo em grupo.");
+            return;
+        }
+    } else {
+        alert("Modo de jogo não selecionado!");
+        return;
+    }
 
-    if (j3Container && j3Container.style.display !== "none" && j3Input) {
-      const j3 = j3Input.value.trim();
-      if (!j3) {
-        alert("Os nomes dos Jogadores 1, 2 e 3 são obrigatórios.");
-        return;
-      }
-      nomesInputTemp.push(j3);
-    } else if (j3Container && j3Container.style.display !== "none" && !j3Input) {
-      alert("Erro: Campo do Jogador 3 não encontrado.");
-      return;
-    }
+    jogadores = nomesInputTemp;
+    pontos = new Array(jogadores.length).fill(0);
+    penalidades = new Array(jogadores.length).fill(0);
+    desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
+    jogadorAtual = 0;
 
-    for (let i = 4; i <= 5; i++) {
-      const container = document.getElementById(`campo-jogador${i}-container`);
-      const input = document.getElementById(`jogador${i}`);
-
-      if (container && container.style.display !== "none") {
-        if (input) {
-          const nome = input.value.trim();
-          if (!nome) {
-            alert(`O nome do Jogador ${i} é obrigatório, pois o campo foi adicionado.`);
-            return;
-          }
-          nomesInputTemp.push(nome);
-        } else {
-          alert(`Erro de configuração: Campo de input para Jogador ${i} não encontrado, mas o espaço está visível.`);
-          return;
-        }
-      }
-    }
-
-    if (nomesInputTemp.length < 3) {
-      alert("Para o modo grupo, preencha os nomes de pelo menos 3 jogadores.");
-      return;
-    }
-  } else {
-    alert("Modo de jogo não selecionado!");
-    return;
-  }
-
-  jogadores = nomesInputTemp;
-  pontos = new Array(jogadores.length).fill(0);
-  penalidades = new Array(jogadores.length).fill(0);
-  desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
-  jogadorAtual = 0;
-
-  document.getElementById("cadastro-section").style.display = "none";
-  document.getElementById("nivel-section").style.display = "block";
+    document.getElementById("cadastro-section").style.display = "none";
+    document.getElementById("nivel-section").style.display = "block";
 }
 
 function selecionarNivel(nivel) {
-    if (nivel === "facil") {
-        nivelSelecionado = "facil";
-        emojiNivel = "Fácil";
-    } else if (nivel === "medio") {
-        nivelSelecionado = "medio";
-        emojiNivel = "Médio";
-    } else {
-        nivelSelecionado = "dificil";
-        emojiNivel = "Difícil";
-    }
-    nivelEscolhidoDisplay.textContent = `Nível: ${emojiNivel}`;
-    document.getElementById("nivel-section").style.display = "none";
-    document.getElementById("jogo-section").style.display = "block";
+    nivelSelecionado = nivel;
+    emojiNivel = nivel.charAt(0).toUpperCase() + nivel.slice(1);
 
-    if (!jogadores || jogadores.length === 0) {
-        alert("Erro: Jogadores não definidos. Reiniciando o cadastro.");
-        reiniciarJogo(); 
-        return;
-    }
-    if (jogadorAtual >= jogadores.length || jogadorAtual < 0) {
-        jogadorAtual = 0;
-    }
+    nivelEscolhidoDisplay.textContent = `Nível: ${emojiNivel}`;
+    document.getElementById("nivel-section").style.display = "none";
+    document.getElementById("jogo-section").style.display = "block";
 
-    vezDoJogador.textContent = `É a vez de: ${jogadores[jogadorAtual]}`;
-    resultado.textContent = "";
-    mensagem.textContent = "";
-    avaliacao.style.display = "none";
-    btnGirar.style.display = "none"; 
-    document.getElementById("escolha-container").style.display = "flex";
-    girando = false;
-    atualizarPlacar();
+    if (!jogadores || jogadores.length === 0) {
+        alert("Erro: Jogadores não definidos. Reiniciando o cadastro.");
+        reiniciarJogo();
+        return;
+    }
+    
+    prepararParaNovaRodada(false);
+    atualizarPlacar();
 
-    const btnVoltar = document.getElementById("btn-voltar-discreto");
-    btnVoltar.style.display = "inline-block";
-    btnVoltar.disabled = true; 
-
-    girarRoleta(); 
+    const btnVoltar = document.getElementById("btn-voltar-discreto");
+    btnVoltar.style.display = "inline-block";
+    btnVoltar.disabled = false;
 }
 
 function girarRoleta() {
-  if (girando) return;
-  document.getElementById("btn-voltar-discreto").disabled = true;
-  girando = true;
-  mensagem.textContent = "Sorteando...";
-  btnGirar.style.display = "none";
-  document.getElementById("escolha-container").style.display = "flex";
-  const opcoes = [
-    document.getElementById("opcao-verdade"),
-    document.getElementById("opcao-consequencia"),
-  ];
-  opcoes[0].classList.remove("piscar");
-  opcoes[1].classList.remove("piscar");
+    if (girando) return;
+    girando = true;
+    
+    resultado.style.display = "none";
+    resultado.textContent = "";
+    avaliacao.style.display = "none";
 
-  let selecionadoIndex = Math.floor(Math.random() * 2);
-  let ciclos = 6 + Math.floor(Math.random() * 8);
-  let atual = 0;
-  const intervalo = setInterval(() => {
-    opcoes.forEach((opt) => opt.classList.remove("piscar"));
-    opcoes[atual % 2].classList.add("piscar");
-    atual++;
-    if (atual >= ciclos) {
-      clearInterval(intervalo);
-      opcoes.forEach((opt) => opt.classList.remove("piscar"));
-      opcoes[selecionadoIndex].classList.add("piscar");
-      setTimeout(() => {
-        opcoes[selecionadoIndex].classList.remove("piscar");
-        mostrarResultado(selecionadoIndex);
-        girando = false;
-      }, 700);
-    }
-  }, 200);
+    document.getElementById("btn-voltar-discreto").disabled = true;
+    mensagem.textContent = "Sorteando...";
+    btnGirar.style.display = "none";
+
+    const chanceDesafio = 0.9;
+    if ((nivelSelecionado === 'facil' || nivelSelecionado === 'medio') && Math.random() < chanceDesafio) {
+        iniciarDesafioDeNivel();
+        return;
+    }
+
+    document.getElementById("escolha-container").style.display = "flex";
+
+    const opcoes = [
+        document.getElementById("opcao-verdade"),
+        document.getElementById("opcao-consequencia"),
+    ];
+
+    if (!opcoes[0] || !opcoes[1]) {
+        console.error("ERRO CRÍTICO: Elementos de Verdade/Consequência não encontrados no HTML.");
+        alert("Erro no jogo! Verifique o console (F12).");
+        girando = false;
+        return;
+    }
+
+    let piscadas = 0;
+    const totalPiscadas = 10;
+    let indexAtual = 0;
+
+    function animarPiscada() {
+        opcoes.forEach(opt => opt.classList.remove('piscar'));
+        if (opcoes[indexAtual]) {
+            opcoes[indexAtual].classList.add('piscar');
+        }
+        indexAtual = 1 - indexAtual;
+        piscadas++;
+        if (piscadas < totalPiscadas) {
+            setTimeout(animarPiscada, 150);
+        } else {
+            finalizarSorteio();
+        }
+    }
+
+    function finalizarSorteio() {
+        const selecionadoIndex = Math.floor(Math.random() * 2);
+        opcoes.forEach(opt => opt.classList.remove('piscar'));
+        if (opcoes[selecionadoIndex]) {
+            opcoes[selecionadoIndex].classList.add('piscar');
+        }
+        setTimeout(() => {
+            if (opcoes[selecionadoIndex]) {
+                opcoes[selecionadoIndex].classList.remove('piscar');
+            }
+            mostrarResultado(selecionadoIndex);
+            girando = false;
+        }, 800);
+    }
+    animarPiscada();
 }
 
+
 function mostrarResultado(indice) {
-  const tipo = segmentos[indice].texto.toLowerCase();
-  ultimaEscolha = tipo;
-  mensagem.textContent = `${segmentos[indice].texto}!`;
-  resultado.textContent = "";
-  btnGirar.style.display = "none";
-  document.getElementById("escolha-container").style.display = "none";
+    const tipo = segmentos[indice].texto.toLowerCase();
+    ultimaEscolha = tipo;
+    mensagem.textContent = `${segmentos[indice].texto}!`;
+    
+    resultado.style.display = "block";
+    resultado.textContent = "";
 
-  const animacao = document.getElementById("animacao-resultado");
-  animacao.className = "animacao-resultado";
-  animacao.textContent = tipo === "verdade" ? "V" : "C";
-  void animacao.offsetWidth;
-  animacao.classList.add(
-    tipo === "verdade" ? "animacao-verdade" : "animacao-consequencia"
-  );
-  animacao.classList.remove("hidden");
+    btnGirar.style.display = "none";
+    document.getElementById("escolha-container").style.display = "none";
 
-  setTimeout(() => {
-    animacao.className = "animacao-resultado hidden";
-    animacao.textContent = "";
+    const animacao = document.getElementById("animacao-resultado");
+    const spanAnimacao = animacao.querySelector('span');
+    spanAnimacao.className = 'animacao-botao'; 
 
-    let fraseSorteada = "";
-    const tipoDesafio = tipo;
-    let arrayCandidato = [];
+    spanAnimacao.textContent = tipo === "verdade" ? "V" : "C";
+    void animacao.offsetWidth;
+    animacao.classList.add(
+        tipo === "verdade" ? "animacao-verdade" : "animacao-consequencia"
+    );
+    animacao.classList.remove("hidden", "animacao-desafio", "animacao-prenda");
+    spanAnimacao.classList.remove("animacao-desafio-btn", "animacao-prenda-btn");
+    spanAnimacao.classList.add(tipo === "verdade" ? "animacao-verdade-btn" : "animacao-consequencia-btn");
 
-    const isArrayValido = (arr) =>
-      Array.isArray(arr) &&
-      arr.length > 0 &&
-      arr.some((item) => typeof item === "string" && item.trim() !== "");
-    if (perguntas[modoJogo] && perguntas[modoJogo][nivelSelecionado]) {
-      const especifico = perguntas[modoJogo][nivelSelecionado][tipoDesafio];
-      if (isArrayValido(especifico)) {
-        arrayCandidato = especifico;
-      }
-    }
+    setTimeout(() => {
+        animacao.className = "animacao-resultado hidden";
+        spanAnimacao.textContent = "";
 
-    if (
-      arrayCandidato.length === 0 &&
-      perguntas.dupla &&
-      perguntas.dupla[nivelSelecionado]
-    ) {
-      const fallbackDuplaNivel =
-        perguntas.dupla[nivelSelecionado][tipoDesafio];
-      if (isArrayValido(fallbackDuplaNivel)) {
-        arrayCandidato = fallbackDuplaNivel;
-      }
-    }
+        let fraseSorteada = "";
+        const tipoDesafio = tipo;
+        let arrayCandidato = [];
+        const isArrayValido = (arr) => Array.isArray(arr) && arr.length > 0 && arr.some((item) => typeof item === "string" && item.trim() !== "");
 
-    if (arrayCandidato.length === 0 && perguntas[modoJogo]) {
-      const pFacil = perguntas[modoJogo].facil?.[tipoDesafio] || [];
-      const pMedio = perguntas[modoJogo].medio?.[tipoDesafio] || [];
-      const pDificil = perguntas[modoJogo].dificil?.[tipoDesafio] || [];
-      const combinadasModo = [...pFacil, ...pMedio, ...pDificil].filter(
-        (item) => typeof item === "string" && item.trim() !== ""
-      );
-      if (combinadasModo.length > 0) arrayCandidato = combinadasModo;
-    }
+        if (perguntas[modoJogo] && perguntas[modoJogo][nivelSelecionado]) {
+            const especifico = perguntas[modoJogo][nivelSelecionado][tipoDesafio];
+            if (isArrayValido(especifico)) {
+                arrayCandidato = especifico;
+            }
+        }
 
-    if (arrayCandidato.length === 0 && perguntas.dupla) {
-      const pFacilDupla = perguntas.dupla.facil?.[tipoDesafio] || [];
-      const pMedioDupla = perguntas.dupla.medio?.[tipoDesafio] || [];
-      const pDificilDupla = perguntas.dupla.dificil?.[tipoDesafio] || [];
-      const combinadasDupla = [...pFacilDupla, ...pMedioDupla, ...pDificilDupla].filter(
-        (item) => typeof item === "string" && item.trim() !== ""
-      );
-      if (combinadasDupla.length > 0) arrayCandidato = combinadasDupla;
-    }
+        if (arrayCandidato.length === 0 && perguntas.dupla && perguntas.dupla[nivelSelecionado]) {
+            const fallbackDuplaNivel = perguntas.dupla[nivelSelecionado][tipoDesafio];
+            if (isArrayValido(fallbackDuplaNivel)) {
+                arrayCandidato = fallbackDuplaNivel;
+            }
+        }
 
-    if (arrayCandidato.length > 0) {
-      fraseSorteada = arrayCandidato[Math.floor(Math.random() * arrayCandidato.length)];
-    } else {
-      console.error(
-        `Nenhuma ${tipoDesafio} válida encontrada para modo '${modoJogo}', nível '${nivelSelecionado}'. Verifique o arquivo dados-perguntas.js.`
-      );
-      fraseSorteada = `Ops! Nenhuma ${tipoDesafio} para (m:${modoJogo}, n:${nivelSelecionado}).`;
-    }
+        if (arrayCandidato.length === 0) {
+            fraseSorteada = `Ops! Nenhuma pergunta encontrada para este nível.`;
+        } else {
+            fraseSorteada = arrayCandidato[Math.floor(Math.random() * arrayCandidato.length)];
+        }
 
-        if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
-        resultado.innerHTML = `${jogadores[jogadorAtual]}, ${fraseSorteada}`;
-        
-        btnGirar.style.display = "none"; 
-        avaliacao.style.display = "flex"; 
-        document.getElementById("btn-cumpriu").disabled = false;
-        document.getElementById("btn-nao-cumpriu").disabled = false;
-        document.getElementById("btn-voltar-discreto").disabled = false; 
-    }, 1500);
+        if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
+        resultado.innerHTML = `${jogadores[jogadorAtual]}, ${fraseSorteada}`;
+
+        btnGirar.style.display = "none";
+        avaliacao.style.display = "flex";
+        document.getElementById("btn-cumpriu").disabled = false;
+        document.getElementById("btn-nao-cumpriu").disabled = false;
+        document.getElementById("btn-voltar-discreto").disabled = false;
+    }, 1500);
 }
 
 function avaliar(cumpriu) {
-    document.querySelectorAll(".btn-voltar, #btn-voltar-discreto").forEach((btn) => (btn.disabled = true));
-    document.getElementById("btn-cumpriu").disabled = true;
-    document.getElementById("btn-nao-cumpriu").disabled = true;
+    document.querySelectorAll(".btn-voltar, #btn-voltar-discreto").forEach((btn) => (btn.disabled = true));
+    document.getElementById("btn-cumpriu").disabled = true;
+    document.getElementById("btn-nao-cumpriu").disabled = true;
 
-    const animacao = document.getElementById("animacao-resultado");
-    animacao.className = "animacao-resultado"; 
-    animacao.style.color = "";
-    animacao.classList.remove("hidden");
+    const animacao = document.getElementById("animacao-resultado");
+    const spanAnimacao = animacao.querySelector('span');
+    spanAnimacao.className = 'animacao-botao'; 
+    animacao.className = 'animacao-resultado';
+    animacao.classList.remove("hidden");
 
-    if (aguardandoPrenda) { 
-        if (cumpriu) {
-            mensagem.textContent = "Você cumpriu a prenda! O jogo continua.";
-            animacao.textContent = "Prenda Cumprida!";
-            animacao.classList.add("animacao-verdade");
-            aguardandoPrenda = false;
-            desafiosNaoCumpridos[jogadorAtual] = 0; 
-        } else {
-            mensagem.textContent = `${jogadores[jogadorAtual]} não cumpriu a prenda!`;
-            animacao.textContent = "❌";
-            animacao.classList.add("animacao-consequencia");
-            aguardandoPrenda = false;
-            desafiosNaoCumpridos[jogadorAtual] = 0; 
+    if (aguardandoPrenda) {
+        if (cumpriu) {
+            mensagem.textContent = "Você cumpriu a prenda! O jogo continua.";
+            animacao.classList.add("animacao-verdade");
+            spanAnimacao.classList.add("animacao-verdade-btn");
+            spanAnimacao.textContent = "Prenda Cumprida!";
+            aguardandoPrenda = false;
+            desafiosNaoCumpridos[jogadorAtual] = 0;
+        } else {
+            mensagem.textContent = `${jogadores[jogadorAtual]} não cumpriu a prenda!`;
+            animacao.classList.add("animacao-consequencia");
+            spanAnimacao.classList.add("animacao-consequencia-btn");
+            spanAnimacao.textContent = "❌";
+            aguardandoPrenda = false;
+            desafiosNaoCumpridos[jogadorAtual] = 0;
+            setTimeout(() => {
+                animacao.classList.add("hidden");
+                spanAnimacao.textContent = "";
+                anunciarPerdedor(jogadores[jogadorAtual]);
+            }, 1500);
+            atualizarPlacar();
+            return;
+        }
+        setTimeout(() => {
+            animacao.classList.add("hidden");
+            spanAnimacao.textContent = "";
+            if (!verificarFimDeJogo(true)) {
+                prepararParaNovaRodada();
+            }
+        }, 1500);
+        return;
+    }
 
-            setTimeout(() => { 
-                animacao.className = "animacao-resultado hidden";
-                animacao.textContent = "";
-                anunciarPerdedor(jogadores[jogadorAtual]); 
-            }, 1500);
-            atualizarPlacar();
-            return; 
-        }
+    if (cumpriu) {
+        pontos[jogadorAtual]++;
+        mensagem.textContent = "Você cumpriu! +1 ponto.";
+        animacao.classList.add("animacao-verdade");
+        spanAnimacao.classList.add("animacao-verdade-btn");
+        spanAnimacao.textContent = "✅";
+        desafiosNaoCumpridos[jogadorAtual] = 0;
+    } else {
+        penalidades[jogadorAtual]++;
+        desafiosNaoCumpridos[jogadorAtual]++;
+        if (pontos[jogadorAtual] > 0) {
+            pontos[jogadorAtual]--;
+        }
+        mensagem.textContent = "Você não cumpriu! -1 ponto.";
+        animacao.classList.add("animacao-consequencia");
+        spanAnimacao.classList.add("animacao-consequencia-btn");
+        spanAnimacao.textContent = "❌";
 
-        atualizarPlacar();
-        setTimeout(() => { 
-            animacao.className = "animacao-resultado hidden";
-            animacao.textContent = "";
-            if (!verificarFimDeJogo()) { 
-                jogadorAtual = (jogadorAtual + 1) % jogadores.length; 
-                prepararParaNovaRodada(); 
-            } else {
-                avaliacao.style.display = "none";
-                btnGirar.style.display = "none";
-                document.getElementById("btn-reiniciar").style.display = "inline-block";
-                document.querySelectorAll(".btn-voltar, #btn-voltar-discreto").forEach((btn) => (btn.style.display = "none"));
-            }
-        }, 1500);
-        return; 
-    }
+        if (desafiosNaoCumpridos[jogadorAtual] >= 2) {
+            aguardandoPrenda = true;
+            let prendaSorteadaParaPenalidade;
+            const listaPrendas = modoJogo === 'dupla' ? prendas : prendasGrupo;
+            if (listaPrendas && listaPrendas.length > 0) {
+                prendaSorteadaParaPenalidade = listaPrendas[Math.floor(Math.random() * listaPrendas.length)];
+                mensagem.textContent = "Prenda:";
+                resultado.textContent = `${jogadores[jogadorAtual]}, ${prendaSorteadaParaPenalidade}`;
 
-    if (cumpriu) {
-        pontos[jogadorAtual]++;
-        mensagem.textContent = "Você cumpriu! +1 ponto.";
-        animacao.textContent = "✅";
-        animacao.classList.add("animacao-verdade");
-        desafiosNaoCumpridos[jogadorAtual] = 0; 
-    } else { 
-        penalidades[jogadorAtual]++;
-        desafiosNaoCumpridos[jogadorAtual]++;
-        if (pontos[jogadorAtual] > 0) {
-            pontos[jogadorAtual]--; 
-        }
-        mensagem.textContent = "Você não cumpriu! -1 ponto.";
-        animacao.textContent = "❌";
-        animacao.classList.add("animacao-consequencia");
+                animacao.classList.add("animacao-prenda");
+                spanAnimacao.classList.add("animacao-prenda-btn");
+                spanAnimacao.textContent = "PAGUE A PRENDA!";
 
-        if (desafiosNaoCumpridos[jogadorAtual] >= 2) {
-            aguardandoPrenda = true; 
-            let prendaSorteadaParaPenalidade;
+                setTimeout(() => {
+                    animacao.classList.add("hidden");
+                    spanAnimacao.textContent = "";
+                    avaliacao.style.display = "flex";
+                    document.getElementById("btn-cumpriu").disabled = false;
+                    document.getElementById("btn-nao-cumpriu").disabled = false;
+                    document.querySelectorAll('.btn-voltar, #btn-voltar-discreto').forEach(btn => btn.disabled = false);
+                }, 1800);
+            } else {
+                anunciarPerdedor(jogadores[jogadorAtual]);
+            }
+            atualizarPlacar();
+            return;
+        }
+    }
+    atualizarPlacar();
+    setTimeout(() => {
+        animacao.classList.add("hidden");
+        spanAnimacao.textContent = "";
+        if (!verificarFimDeJogo(false)) {
+            prepararParaNovaRodada();
+        }
+    }, 1800);
+}
 
-            if (modoJogo === "dupla") {
-                prendaSorteadaParaPenalidade = prendas[Math.floor(Math.random() * prendas.length)];
-            } else if (modoJogo === "grupo") {
-                prendaSorteadaParaPenalidade = prendasGrupo[Math.floor(Math.random() * prendasGrupo.length)];
-            } else {
-                prendaSorteadaParaPenalidade = "Ops! Nenhuma prenda definida para este modo de jogo.";
-            }
+function verificarVotos() {
+    const containersVotos = document.querySelectorAll('.container-voto-jogador');
+    let todosVotaram = true;
+    for (const container of containersVotos) {
+        const voto = container.getAttribute('data-voto');
+        if (!voto || voto === '') {
+            todosVotaram = false;
+            break;
+        }
+    }
 
-            if (prendaSorteadaParaPenalidade) {
-                mensagem.textContent = "Prenda:";
-                resultado.textContent = `${jogadores[jogadorAtual]}, ${prendaSorteadaParaPenalidade}`;
-                animacao.textContent = "PAGUE A PRENDA!";
-                animacao.classList.remove("animacao-consequencia");
-                animacao.classList.add("animacao-prenda");
+    const btnConfirmar = document.getElementById("btn-confirmar-votos-desafio");
+    if (todosVotaram) {
+        btnConfirmar.style.display = 'inline-block';
+    } else {
+        btnConfirmar.style.display = 'none';
+    }
+}
 
-                setTimeout(() => { 
-                    animacao.className = "animacao-resultado hidden";
-                    animacao.textContent = "";
-                    avaliacao.style.display = "flex"; 
-                    document.getElementById("btn-cumpriu").disabled = false;
-                    document.getElementById("btn-nao-cumpriu").disabled = false;
-                    document.querySelectorAll('.btn-voltar, #btn-voltar-discreto').forEach(btn => btn.disabled = false); 
-                }, 1800);
-            } else { 
-                mensagem.textContent = "Você acumulou penalidades! Sem prendas cadastradas. PERDEU O JOGO!";
-                animacao.textContent = "❌ PERDEU!";
-                animacao.classList.add("animacao-consequencia");
-                aguardandoPrenda = false; 
-                setTimeout(() => {
-                    animacao.className = "animacao-resultado hidden";
-                    animacao.textContent = "";
-                    anunciarPerdedor(jogadores[jogadorAtual]);
-                }, 1800);
-            }
-            atualizarPlacar();
-            return; 
-        }
-    }
-    atualizarPlacar();
-    setTimeout(() => {
-        animacao.className = "animacao-resultado hidden";
-        animacao.textContent = "";
+function iniciarDesafioDeNivel() {
+    document.body.classList.add('desafio-ativo');
+    document.getElementById("escolha-container").style.display = "none";
 
-        if (!verificarFimDeJogo()) { 
-            jogadorAtual = (jogadorAtual + 1) % jogadores.length; 
-            prepararParaNovaRodada(); 
-        } else {
-            avaliacao.style.display = "none";
-            btnGirar.style.display = "none";
-            document.getElementById("btn-reiniciar").style.display = "inline-block";
-            document.querySelectorAll(".btn-voltar, #btn-voltar-discreto").forEach((btn) => (btn.style.display = "none"));
-        }
-    }, 1800); 
+    const animacao = document.getElementById("animacao-resultado");
+const spanAnimacao = animacao.querySelector('span');
+animacao.className = "animacao-resultado animacao-desafio";
+spanAnimacao.className = "animacao-botao animacao-desafio-btn";
+
+spanAnimacao.textContent = "DESAFIO!";
+animacao.classList.remove("hidden");
+
+setTimeout(() => {
+    animacao.classList.add("hidden");
+
+    const desafioSection = document.getElementById("desafio-nivel-section");
+    const desafioTexto = document.getElementById("desafio-nivel-texto");
+    const respostasContainer = document.getElementById("respostas-jogadores-desafio");
+    const btnConfirmar = document.getElementById("btn-confirmar-votos-desafio");
+
+    const proximoNivel = nivelSelecionado === 'facil' ? 'medio' : 'difícil';
+    desafioTexto.textContent = `Todos os jogadores concordam em passar para o nível ${proximoNivel}? Se um recusar, todos devem pagar uma prenda!`;
+
+    respostasContainer.innerHTML = '';
+    jogadores.forEach(jogador => {
+        const divJogador = document.createElement('div');
+        divJogador.className = 'container-voto-jogador';
+        divJogador.setAttribute('data-jogador', jogador);
+        divJogador.setAttribute('data-voto', '');
+        divJogador.innerHTML = `
+            <span class="nome-jogador-voto">${jogador}</span>
+            <div class="botoes-voto">
+                <button class="voto-btn sim">Sim</button>
+                <button class="voto-btn nao">Não</button>
+            </div>
+        `;
+        respostasContainer.appendChild(divJogador);
+
+        const btnSim = divJogador.querySelector('.voto-btn.sim');
+        const btnNao = divJogador.querySelector('.voto-btn.nao');
+
+        btnSim.onclick = () => {
+            btnSim.classList.add('active');
+            btnNao.classList.remove('active');
+            divJogador.setAttribute('data-voto', 'sim');
+            verificarVotos();
+        };
+        btnNao.onclick = () => {
+            btnNao.classList.add('active');
+            btnSim.classList.remove('active');
+            divJogador.setAttribute('data-voto', 'nao');
+            verificarVotos();
+        };
+    });
+
+    btnConfirmar.onclick = processarVotosDesafio;
+    desafioSection.style.display = 'flex'; // Alterado para 'flex' para que ele ocupe largura corretamente
+}, 1800);
+}
+
+function processarVotosDesafio() {
+    const containersVotos = document.querySelectorAll('.container-voto-jogador');
+    let todosAceitaram = true;
+
+    for (const container of containersVotos) {
+        const voto = container.getAttribute('data-voto');
+        if (voto === 'nao') {
+            todosAceitaram = false;
+        }
+    }
+    
+    document.body.classList.remove('desafio-ativo');
+    document.getElementById('desafio-nivel-section').style.display = 'none';
+    document.getElementById('btn-confirmar-votos-desafio').style.display = 'none';
+    vezDoJogador.style.display = 'none';
+
+    if (todosAceitaram) {
+        nivelSelecionado = nivelSelecionado === 'facil' ? 'medio' : 'difícil';
+        emojiNivel = nivelSelecionado.charAt(0).toUpperCase() + nivelSelecionado.slice(1);
+        nivelEscolhidoDisplay.textContent = `Nível: ${emojiNivel}`;
+        mensagem.textContent = 'Desafio Aceito!';
+        resultado.style.display = "block";
+        resultado.textContent = `O jogo continua no nível ${emojiNivel}!`;
+    } else {
+        mensagem.textContent = 'Desafio Recusado!';
+        let prendaSorteada = "beba um gole da sua bebida.";
+        const listaPrendas = modoJogo === 'dupla' ? prendas : prendasGrupo;
+        if (listaPrendas && listaPrendas.length > 0) {
+            prendaSorteada = listaPrendas[Math.floor(Math.random() * listaPrendas.length)];
+        }
+        resultado.style.display = "block";
+        resultado.textContent = `Como consequência, todos devem: ${prendaSorteada}`;
+    }
+    
+    const btnContinuar = document.getElementById("btn-continuar-jogo");
+    btnContinuar.style.display = "inline-block";
+    btnContinuar.onclick = () => {
+        btnContinuar.style.display = "none";
+        document.getElementById("btn-voltar-discreto").style.display = "none";
+        prepararParaNovaRodada(false);
+    };
+
+    const btnVoltar = document.getElementById("btn-voltar-discreto");
+    btnVoltar.style.display = "inline-block";
+    btnVoltar.disabled = false;
+}
+
+
+function prepararParaNovaRodadaVisual() {
+    nivelEscolhidoDisplay.style.display = "block";
+    vezDoJogador.style.display = "block";
+    placar.style.display = "block";
+    mensagem.style.display = "block";
+}
+
+function prepararParaNovaRodada(avancarJogador = true) {
+    if (jogadores.length <= 1) {
+        if (jogadores.length === 1) anunciarVencedor(jogadores[0], []);
+        return;
+    }
+
+    if (avancarJogador) {
+        jogadorAtual = (jogadorAtual + 1) % jogadores.length;
+    }
+    
+    if (jogadorAtual >= jogadores.length) {
+        jogadorAtual = 0;
+    }
+    
+    prepararParaNovaRodadaVisual();
+    
+    atualizarVez();
+    avaliacao.style.display = "none";
+    resultado.style.display = "none"; 
+    resultado.textContent = "";
+
+    const btnContinuar = document.getElementById("btn-continuar-jogo");
+    if (btnContinuar) btnContinuar.style.display = "none";
+
+    document.getElementById("escolha-container").style.display = "none";
+    btnGirar.textContent = "Sortear";
+    btnGirar.style.display = "inline-block";
+    btnGirar.disabled = false;
+    girando = false;
+
+    btnGirar.onclick = function() {
+        if (girando) return;
+        this.disabled = true;
+        document.getElementById("btn-voltar-discreto").disabled = true;
+        girarRoleta();
+    };
+
+    document.getElementById("btn-voltar-discreto").style.display = "inline-block";
+    document.getElementById("btn-voltar-discreto").disabled = false;
+    document.getElementById("btn-cumpriu").disabled = true;
+    document.getElementById("btn-nao-cumpriu").disabled = true;
+}
+
+
+function anunciarVencedor(vencedor, perdedoresArray) {
+    vezDoJogador.textContent = "";
+    placar.innerHTML = "";
+    mensagem.classList.add("mensagem-vitoria");
+    mensagem.textContent = `${vencedor} venceu o jogo!`;
+
+    let perdedorParaPrendaNome = perdedoresArray.length > 0 ? perdedoresArray[0] : "";
+    let prendaSorteada = "cumpra uma prenda final escolhida pelo vencedor!";
+    if (perdedorParaPrendaNome) {
+        const listaPrendas = modoJogo === 'dupla' ? prendas : prendasGrupo;
+        if (listaPrendas && listaPrendas.length > 0) {
+            prendaSorteada = listaPrendas[Math.floor(Math.random() * listaPrendas.length)];
+        }
+        resultado.style.display = "block";
+        resultado.innerHTML = `${perdedorParaPrendaNome}, sua prenda final: ${prendaSorteada}`;
+    } else {
+        resultado.innerHTML = `Parabéns, ${vencedor}!`;
+    }
+
+    btnGirar.style.display = "none";
+    document.getElementById("escolha-container").style.display = "none";
+    avaliacao.style.display = "none";
+    document.getElementById("btn-reiniciar").style.display = "inline-block";
+    document.getElementById("btn-voltar-discreto").style.display = "none";
+    const btnContinuar = document.getElementById("btn-continuar-jogo");
+    if (btnContinuar) btnContinuar.style.display = "none";
 }
 
 function anunciarPerdedor(jogadorPerdedor) {
-    mensagem.classList.remove("mensagem-vitoria");
-    mensagem.textContent = `${jogadorPerdedor} perdeu o jogo!`;
+  mensagem.classList.remove("mensagem-vitoria");
+  mensagem.textContent = `${jogadorPerdedor} foi eliminado!`;
+  
+  const indicePerdedor = jogadores.indexOf(jogadorPerdedor);
+  if (indicePerdedor > -1) {
+    jogadores.splice(indicePerdedor, 1);
+    pontos.splice(indicePerdedor, 1);
+    penalidades.splice(indicePerdedor, 1);
+    desafiosNaoCumpridos.splice(indicePerdedor, 1);
+    if (jogadorAtual >= indicePerdedor) {
+      jogadorAtual--;
+    }
+    if (jogadorAtual < 0) jogadorAtual = 0;
+    if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
 
-    const indicePerdedor = jogadores.indexOf(jogadorPerdedor);
-    if (indicePerdedor > -1) {
-        jogadores.splice(indicePerdedor, 1);
-        pontos.splice(indicePerdedor, 1);
-        penalidades.splice(indicePerdedor, 1); 
-        desafiosNaoCumpridos.splice(indicePerdedor, 1);
-        if (jogadorAtual >= jogadores.length && jogadores.length > 0) {
-            jogadorAtual = 0;
-        } else if (indicePerdedor < jogadorAtual) {
-            jogadorAtual--;
-        }
-    }
+  }
 
-    let prendaFinalDoPerdedor;
-    if (modoJogo === "dupla") {
-        prendaFinalDoPerdedor = "vire um copo (ou meio se o copo for grande) o mais rápido possível!";
-    } else if (modoJogo === "grupo") {
-        prendaFinalDoPerdedor = prendasGrupo[Math.floor(Math.random() * prendasGrupo.length)];
-    } else {
-        prendaFinalDoPerdedor = "pague uma prenda por ter perdido!";
-    }
-    resultado.textContent = `${jogadorPerdedor}, sua prenda final: ${prendaFinalDoPerdedor}`;
+  if (verificarFimDeJogo(true)) return;
 
-    if (avaliacao) avaliacao.style.display = "none";
-    if (btnGirar) btnGirar.style.display = "none";
+  const btnContinuar = document.getElementById("btn-continuar-jogo");
+  if (btnContinuar) {
+    btnContinuar.style.display = "inline-block";
+    btnContinuar.onclick = () => {
+      prepararParaNovaRodada();
+      btnContinuar.style.display = "none";
+      document.getElementById("btn-voltar-discreto").style.display = 'none';
+    }
+    const btnVoltar = document.getElementById("btn-voltar-discreto");
+    btnVoltar.style.display = "inline-block";
+    btnVoltar.disabled = false;
 
-
-    if (jogadores.length <= 1) { 
-        if (jogadores.length === 1) {
-            anunciarVencedor(jogadores[0], [jogadorPerdedor]);
-        } else {
-            mensagem.textContent = "Todos os jogadores foram eliminados! Fim de jogo!";
-            resultado.textContent = "";
-        }
-        const btnContinuar = document.getElementById("btn-continuar-jogo");
-        if (btnContinuar) btnContinuar.style.display = "none";
-
-        const escolhaContainer = document.getElementById("escolha-container");
-        if (escolhaContainer) escolhaContainer.style.display = "none";
-        
-        document.getElementById("btn-reiniciar").style.display = "inline-block";
-        document.getElementById("btn-voltar-discreto").style.display = "none";
-
-    } else { 
-        document.querySelectorAll(".btn-voltar, #btn-voltar-discreto").forEach((btn) => (btn.disabled = false));
-
-        if (modoJogo === "grupo") {
-            const btnContinuar = document.getElementById("btn-continuar-jogo");
-            if (btnContinuar) {
-                btnContinuar.style.display = "inline-block";
-                btnContinuar.onclick = function() {
-                    this.style.display = "none"; 
-                    prepararParaNovaRodada();
-                };
-            } else {
-                console.error("Botão 'btn-continuar-jogo' não encontrado no HTML. Prosseguindo automaticamente.");
-                setTimeout(() => {
-                    prepararParaNovaRodada();
-                }, 2000); 
-            }
-        } else { 
-            setTimeout(() => {
-                prepararParaNovaRodada();
-            }, 2000); 
-        }
-    }
-    atualizarPlacar();
+  } else {
+    setTimeout(prepararParaNovaRodada, 2000);
+  }
+  atualizarPlacar();
 }
 
-function atualizarVez() {
-  if (jogadorAtual >= jogadores.length && jogadores.length > 0 ) { 
-      jogadorAtual = 0;
-  }
-  if (jogadores.length > 0) {
-      vezDoJogador.textContent = `É a vez de: ${jogadores[jogadorAtual]}`;
-  } else {
-      vezDoJogador.textContent = ""; 
-  }
-}
 
-function atualizarPlacar() {
-    let placarTexto = "";
-    if (jogadores.length > 0) {
-        jogadores.forEach((jogador, index) => {
-            placarTexto += `${jogador}: ${pontos[index]} pts`;
-            if (index < jogadores.length - 1) {
-                placarTexto += " — ";
-            }
-        });
-    }
-    placar.textContent = placarTexto;
-}
+function verificarFimDeJogo(checarApenasVencedorRestante) {
+    if (jogadores.length === 1 && checarApenasVencedorRestante) {
+        anunciarVencedor(jogadores[0], []);
+        return true;
+    }
 
-function sortearVerdadeSimples() {
-  if (!jogadores || jogadores.length === 0) {
-    console.error("Nenhum jogador definido para sortear verdade.");
-    document.getElementById("pergunta-simples").textContent = "Cadastre jogadores primeiro.";
-    document.getElementById("btn-sortear-verdade").disabled = true;
-    return;
-  }
-  document.getElementById("btn-sortear-verdade").disabled = true;
-  let todasVerdades = [];
-  const niveis = ["facil", "medio", "dificil"];
-  const tipoDesafio = "verdade";
-  if (perguntas[modoJogo]) {
-    niveis.forEach((nivel) => {
-      if (perguntas[modoJogo][nivel] && perguntas[modoJogo][nivel][tipoDesafio]) {
-        todasVerdades.push(...perguntas[modoJogo][nivel][tipoDesafio]);
-      }
-    });
-  }
-  if (todasVerdades.length === 0) {
-    if (perguntas.dupla) {
-      niveis.forEach((nivel) => {
-        if (perguntas.dupla[nivel] && perguntas.dupla[nivel][tipoDesafio]) {
-          todasVerdades.push(...perguntas.dupla[nivel][tipoDesafio]);
-        }
-      });
-    }
-  }
-  todasVerdades = [
-    ...new Set(
-      todasVerdades.filter((item) => typeof item === "string" && item.trim() !== "")
-    ),
-  ];
-  if (todasVerdades.length === 0) {
-    document.getElementById("pergunta-simples").textContent = "Nenhuma pergunta de verdade encontrada!";
-    document.getElementById("btn-sortear-verdade").disabled = false;
-    return;
-  }
-  if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
-  const pergunta = todasVerdades[Math.floor(Math.random() * todasVerdades.length)];
-  document.getElementById("vez-simples").textContent = `Vez de: ${jogadores[jogadorAtual]}`;
-  document.getElementById("pergunta-simples").innerHTML = "<span class='buscando'>🔎 Buscando...</span>";
-  setTimeout(() => {
-    document.getElementById("pergunta-simples").textContent = `${jogadores[jogadorAtual]}, ${pergunta}`;
-    jogadorAtual = (jogadorAtual + 1) % jogadores.length;
-    document.getElementById("btn-sortear-verdade").disabled = false;
-  }, 1000);
-}
-
-function verificarFimDeJogo() {
     const limite = limitesPontuacao[nivelSelecionado];
-    if (limite === undefined || !jogadores || jogadores.length < 2) {
+    if (!limite || !jogadores || jogadores.length < 1) {
         return false;
     }
 
     const pontuacaoMaxima = Math.max(...pontos);
+
     if (pontuacaoMaxima < limite) {
         return false;
     }
 
-    const ultimoJogadorIndex = jogadores.length - 1;
-    if (jogadorAtual !== ultimoJogadorIndex) {
+    const indicesLideres = [];
+    pontos.forEach((p, i) => {
+        if (p === pontuacaoMaxima) {
+            indicesLideres.push(i);
+        }
+    });
+
+    if (indicesLideres.length > 1) {
         return false;
     }
 
-    let vencedores = [];
-    for (let i = 0; i < jogadores.length; i++) {
-        if (pontos[i] === pontuacaoMaxima) {
-            vencedores.push({ nome: jogadores[i], pontuacao: pontos[i], indice: i });
+    const indiceVencedor = indicesLideres[0];
+    const nomeVencedor = jogadores[indiceVencedor];
+    const perdedores = jogadores.filter(j => j !== nomeVencedor);
+
+    const outrasPontuacoes = pontos.filter((_, i) => i !== indiceVencedor);
+    const segundoLugarPontos = outrasPontuacoes.length > 0 ? Math.max(...outrasPontuacoes) : -1;
+
+    const diferenca = pontuacaoMaxima - segundoLugarPontos;
+
+    if (diferenca >= 2) {
+        anunciarVencedor(nomeVencedor, perdedores);
+        return true;
+    }
+
+    if (diferenca === 1) {
+        const indiceSegundoLugar = pontos.indexOf(segundoLugarPontos);
+
+        if (indiceSegundoLugar !== -1 && desafiosNaoCumpridos[indiceSegundoLugar] > 0) {
+            anunciarVencedor(nomeVencedor, perdedores);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    if (vencedores.length > 1) {
-        console.log(`Empate com ${pontuacaoMaxima} pontos. O jogo continua!`);
-        return false;
-    }
-
-    const vencedor = vencedores[0];
-    const perdedores = jogadores.filter((j) => j !== vencedor.nome);
-    anunciarVencedor(vencedor.nome, perdedores);
-    return true;
+    return false;
 }
 
-function reiniciarJogo() {
-    document.getElementById("btn-reiniciar").style.display = "none";
-    if (mensagem) {
-        mensagem.classList.remove("mensagem-vitoria");
+function atualizarVez() {
+    if (jogadores.length > 0) {
+        if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
+        vezDoJogador.textContent = `É a vez de: ${jogadores[jogadorAtual]}`;
+    } else {
+        vezDoJogador.textContent = "";
     }
-    voltarParaSelecaoDeNivel();
+}
+
+function atualizarPlacar() {
+    let placarTexto = "";
+    if (jogadores.length > 0) {
+        jogadores.forEach((jogador, index) => {
+            placarTexto += `${jogador}: ${pontos[index]} pts`;
+            if (index < jogadores.length - 1) {
+                placarTexto += " — ";
+            }
+        });
+    }
+    placar.textContent = placarTexto;
 }
 
 
 function voltarParaSelecaoModo() {
-    nivelSelecionado = "";
-    jogadores = [];
-    jogadorAtual = 0;
-    pontos = [];
-    penalidades = [];
-    desafiosNaoCumpridos = [];
-    ultimaEscolha = "";
-    emojiNivel = "";
-    aguardandoPrenda = false;
-    modoJogo = "";
-    girando = false;
-
-    if (placar) placar.textContent = "";
-    if (mensagem) mensagem.textContent = "";
-    if (resultado) resultado.textContent = "";
-    if (avaliacao) avaliacao.style.display = "none";
-    if (vezDoJogador) vezDoJogador.textContent = "";
-    if (nivelEscolhidoDisplay) nivelEscolhidoDisplay.textContent = "";
-    
+    document.getElementById("modo-jogo-section").style.display = "block";
     document.getElementById("cadastro-section").style.display = "none";
     document.getElementById("nivel-section").style.display = "none";
     document.getElementById("jogo-section").style.display = "none";
-    document.getElementById("modo-verdade-section").style.display = "none";
-    document.getElementById("modo-jogo-section").style.display = "block";
+}
 
-    for (let i = 1; i <= 5; i++) {
-        const inputJogador = document.getElementById(`jogador${i}`);
-        if (inputJogador) {
-            inputJogador.value = "";
-        }
-        if (i >= 3) {
-            const containerJogador = document.getElementById(`campo-jogador${i}-container`);
-            if (containerJogador) {
-                containerJogador.style.display = "none";
-            }
-        }
-    }
-    const btnAddJogador = document.getElementById("btn-add-jogador"); 
-    if (btnAddJogador) btnAddJogador.style.display = "none";
+function reiniciarJogo() {
+    document.getElementById("btn-reiniciar").style.display = 'none';
+    mensagem.classList.remove('mensagem-vitoria');
+    voltarParaSelecaoModo();
 }
 
 function voltarParaCadastroJogadores() {
-  document.getElementById("nivel-section").style.display = "none";
-  document.getElementById("cadastro-section").style.display = "block";
-  if (modoJogo === 'grupo') {
-      document.getElementById("cadastro-titulo").textContent = "Nomes do Grupo (3-5)";
-      document.getElementById("campo-jogador3-container").style.display = "flex";
-      atualizarVisibilidadeBotaoAddJogador();
-  } else if (modoJogo === 'dupla') {
-      document.getElementById("cadastro-titulo").textContent = "Nomes da Dupla";
-      document.getElementById("btn-add-jogador").style.display = "none";
-      for (let i = 3; i <= 5; i++) {
-          const containerEl = document.getElementById(`campo-jogador${i}-container`);
-          if (containerEl) containerEl.style.display = "none";
-      }
-  }
-}
-
-function prepararParaNovaRodada() {
-    if (jogadores.length === 0) { 
-        vezDoJogador.textContent = "";
-        mensagem.textContent = "Adicione jogadores para começar.";
-        btnGirar.style.display = "none";
-        return;
-    }
-
-    if (jogadorAtual >= jogadores.length ) { 
-        jogadorAtual = 0;
-    }
-    atualizarVez(); 
-    avaliacao.style.display = "none"; 
-    resultado.textContent = "";     
-    
-    if (jogadores[jogadorAtual]) {
-        mensagem.textContent = `${jogadores[jogadorAtual]}, clique em Sortear para o próximo desafio.`;
-    } else {
-        mensagem.textContent = "Clique em Sortear para o próximo desafio.";
-    }
-
-    const btnContinuar = document.getElementById("btn-continuar-jogo");
-    if (btnContinuar) btnContinuar.style.display = "none"; 
-
-    document.getElementById("escolha-container").style.display = "none"; 
-
-    btnGirar.textContent = "Sortear";
-    btnGirar.style.display = "inline-block"; 
-    btnGirar.disabled = false; 
-
-    btnGirar.onclick = function() {
-        this.style.display = "none"; 
-        this.disabled = true; 
-        document.getElementById("btn-voltar-discreto").disabled = true;
-        girarRoleta();
-    };
-
-    document.getElementById("btn-voltar-discreto").disabled = false;
-    document.getElementById("btn-cumpriu").disabled = true; 
-    document.getElementById("btn-nao-cumpriu").disabled = true;
+    document.getElementById("nivel-section").style.display = "none";
+    document.getElementById("cadastro-section").style.display = "block";
 }
 
 function voltarParaSelecaoDeNivel() {
-  mensagem.classList.remove("mensagem-vitoria");
-  document.getElementById("jogo-section").style.display = "none";
-  document.getElementById("nivel-section").style.display = "block";
-  if (document.getElementById("btn-voltar-discreto")) {
-    document.getElementById("btn-voltar-discreto").style.display = "none";
-  }
-  pontos = new Array(jogadores.length).fill(0);
-  penalidades = new Array(jogadores.length).fill(0);
-  desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
-  jogadorAtual = 0;
-  ultimaEscolha = "";
-  aguardandoPrenda = false;
-  nivelSelecionado = "";
-  
-  if (placar) placar.textContent = ""; 
-  if (mensagem) mensagem.textContent = "";
-  if (resultado) resultado.textContent = "";
-  if (avaliacao) avaliacao.style.display = "none";
-  
-  const animacao = document.getElementById("animacao-resultado");
-  if (animacao) {
-    animacao.className = "animacao-resultado hidden";
-    animacao.textContent = "";
-  }
-  if (document.getElementById("escolha-container")) {
-    document.getElementById("escolha-container").style.display = "none";
-  }
-  if (btnGirar) {
-      btnGirar.style.display = "none"; 
-      btnGirar.disabled = false; 
-  }
-  const btnContinuar = document.getElementById("btn-continuar-jogo");
-  if (btnContinuar) btnContinuar.style.display = "none";
-}
-document.getElementById("btn-cumpriu").addEventListener("click", () => avaliar(true));
-document.getElementById("btn-nao-cumpriu").addEventListener("click", () => avaliar(false));
+    document.body.classList.remove('desafio-ativo');
+    document.getElementById("jogo-section").style.display = "none";
+    document.getElementById("nivel-section").style.display = "block";
 
-function ativarModoSoVerdade() {
-  if (!jogadores || jogadores.length === 0) {
-    alert("Por favor, cadastre os jogadores primeiro!");
-    voltarParaSelecaoModo(); 
-    return;
-  }
-  if (jogadorAtual >= jogadores.length) jogadorAtual = 0;
-  document.getElementById("nivel-section").style.display = "none";
-  document.getElementById("jogo-section").style.display = "none"; 
-  mostrarTelaModoVerdade();
-}
-
-function mostrarTelaModoVerdade() {
-  document.getElementById("modo-verdade-section").style.display = "block";
-  document.getElementById("pergunta-simples").textContent = "Clique em 'Sortear Verdade' para começar!";
-  if (jogadores.length > 0) {
-    if (jogadorAtual >= jogadores.length) jogadorAtual = 0; 
-    document.getElementById("vez-simples").textContent = `Vez de: ${jogadores[jogadorAtual]}`;
-  } else {
-    document.getElementById("vez-simples").textContent = "Cadastre jogadores.";
-  }
-  document.getElementById("btn-sortear-verdade").disabled = (jogadores.length === 0);
-}
-
-function anunciarVencedor(vencedor, perdedoresArray) {
-    const elVezDoJogador = document.getElementById("vez-do-jogador");
-    const elMensagem = document.getElementById("mensagem");
-    const elResultado = document.getElementById("resultado");
-    const elPlacar = document.getElementById("placar");
-
-    if (elVezDoJogador) elVezDoJogador.textContent = "";
-    if (elPlacar) elPlacar.innerHTML = "";
-
-    elMensagem.classList.add("mensagem-vitoria");
-    elMensagem.textContent = `${vencedor} venceu o jogo!`;
-
-    let perdedorParaPrendaNome = "";
-    let prendaSorteada = "";
-    
-    if (perdedoresArray && perdedoresArray.length > 0) {
-        perdedorParaPrendaNome = perdedoresArray[0];
-
-        if (perdedorParaPrendaNome) {
-            if (modoJogo === "dupla") {
-                prendaSorteada = prendas[Math.floor(Math.random() * prendas.length)];
-            } else if (modoJogo === "grupo") {
-                prendaSorteada = prendasGrupo[Math.floor(Math.random() * prendasGrupo.length)];
-            } else {
-                prendaSorteada = "cumpra uma prenda final escolhida pelo vencedor!";
-            }
-            elResultado.innerHTML = `${perdedorParaPrendaNome}: ${prendaSorteada}`;
-        } else {
-            elResultado.innerHTML = `Parabéns, ${vencedor}!`;
-        }
-    } else {
-        elResultado.innerHTML = `Parabéns, ${vencedor}!`;
-    }
-
-    btnGirar.style.display = "none";
-    const escolhaContainer = document.getElementById("escolha-container");
-    if (escolhaContainer) {
-        escolhaContainer.style.display = "none";
-    }
-    if (avaliacao) avaliacao.style.display = "none";
-
-    document.getElementById("btn-reiniciar").style.display = "inline-block";
-    const btnVoltarDiscreto = document.getElementById("btn-voltar-discreto");
-    if (btnVoltarDiscreto) {
-        btnVoltarDiscreto.style.display = "none";
-    }
-    const btnContinuar = document.getElementById("btn-continuar-jogo");
-    if (btnContinuar) btnContinuar.style.display = "none";
-}
-
-function selecionarModoDeJogo(modo) {
-  modoJogo = modo;
-  document.getElementById("modo-jogo-section").style.display = "none";
-  document.getElementById("cadastro-section").style.display = "block";
-  for (let i = 1; i <= 5; i++) {
-    const inputEl = document.getElementById(`jogador${i}`);
-    if (inputEl) inputEl.value = ""; 
-    if (i >= 3) { 
-      const containerEl = document.getElementById(`campo-jogador${i}-container`);
-      if (containerEl) {
-        containerEl.style.display = "none";
-      }
-    }
-  }
-  if (modo === "dupla") {
-    document.getElementById("cadastro-titulo").textContent = "Nomes da Dupla";
-    document.getElementById("btn-add-jogador").style.display = "none";
-  } else if (modo === "grupo") {
-    document.getElementById("cadastro-titulo").textContent = "Nomes do Grupo (3-5)";
-    document.getElementById("campo-jogador3-container").style.display = "flex"; 
-    atualizarVisibilidadeBotaoAddJogador();
-  }
-}
-
-function atualizarVisibilidadeBotaoAddJogador() {
-  let camposVisiveisContaveis = 0; 
-  for (let i = 3; i <= 5; i++) {
-    const container = document.getElementById(`campo-jogador${i}-container`);
-    if (container && container.style.display !== "none") {
-      camposVisiveisContaveis++;
-    }
-  }
-  if (2 + camposVisiveisContaveis < 5) {
-    document.getElementById("btn-add-jogador").style.display = "inline-block";
-  } else {
-    document.getElementById("btn-add-jogador").style.display = "none";
-  }
+    pontos = new Array(jogadores.length).fill(0);
+    penalidades = new Array(jogadores.length).fill(0);
+    desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
+    jogadorAtual = 0;
+    aguardandoPrenda = false;
+    girando = false;
+    atualizarPlacar();
 }
 
 function adicionarCampoJogador() {
-  for (let i = 4; i <= 5; i++) { 
-    const container = document.getElementById(`campo-jogador${i}-container`);
-    if (container && container.style.display === "none") {
-      container.style.display = "flex";
-      const inputField = document.getElementById(`jogador${i}`);
-      if (inputField) inputField.value = ""; 
-      break; 
-    }
-  }
-  atualizarVisibilidadeBotaoAddJogador(); 
+    for (let i = 3; i <= 5; i++) {
+        const container = document.getElementById(`campo-jogador${i}-container`);
+        if (container && container.style.display === "none") {
+            container.style.display = "flex";
+            break;
+        }
+    }
+    atualizarVisibilidadeBotaoAddJogador();
 }
 
 function removerCampoJogador(numeroJogadorARemover) {
-  if (numeroJogadorARemover < 4 || numeroJogadorARemover > 5) return; 
+    const input4 = document.getElementById('jogador4');
+    const container4 = document.getElementById('campo-jogador4-container');
+    const input5 = document.getElementById('jogador5');
+    const container5 = document.getElementById('campo-jogador5-container');
 
-  const containerARemover = document.getElementById(`campo-jogador${numeroJogadorARemover}-container`);
-  const inputARemover = document.getElementById(`jogador${numeroJogadorARemover}`);
-  
-  if (inputARemover) inputARemover.value = "";
-  if (containerARemover) containerARemover.style.display = "none"; 
+    if (numeroJogadorARemover === 4) {
+        if (container5.style.display !== 'none') {
+            input4.value = input5.value;
+            input5.value = '';
+            container5.style.display = 'none';
+        } else {
+            input4.value = '';
+            container4.style.display = 'none';
+        }
+    } else if (numeroJogadorARemover === 5) {
+        input5.value = '';
+        container5.style.display = 'none';
+    } else if (numeroJogadorARemover === 3) {
+         const container3 = document.getElementById('campo-jogador3-container');
+         input3.value = '';
+         container3.style.display = 'none';
+    }
 
-  if (numeroJogadorARemover === 4) {
-    const containerJ5 = document.getElementById("campo-jogador5-container");
-    const inputJ5 = document.getElementById("jogador5");
-    const inputJ4 = document.getElementById("jogador4");
 
-    if (containerJ5 && inputJ5 && inputJ4 && containerJ5.style.display !== "none") {
-      inputJ4.value = inputJ5.value; 
-      inputJ5.value = "";
-      containerJ5.style.display = "none";
-    }
-  }
-  atualizarVisibilidadeBotaoAddJogador();
+    atualizarVisibilidadeBotaoAddJogador();
+}
+
+function atualizarVisibilidadeBotaoAddJogador() {
+    let ultimoVisivel = 2;
+    for (let i = 3; i <= 5; i++) {
+        const container = document.getElementById(`campo-jogador${i}-container`);
+        if (container && container.style.display !== 'none') {
+            ultimoVisivel = i;
+        }
+    }
+    
+    if (ultimoVisivel < 5) {
+        document.getElementById("btn-add-jogador").style.display = 'inline-block';
+    } else {
+        document.getElementById("btn-add-jogador").style.display = 'none';
+    }
+}
+
+function ativarModoSoVerdade() {
+    if (!jogadores || jogadores.length === 0) {
+        alert("Por favor, cadastre os jogadores primeiro!");
+        return;
+    }
+    document.getElementById("nivel-section").style.display = "none";
+    document.getElementById("modo-verdade-section").style.display = "block";
+    sortearVerdadeSimples();
+}
+
+function sortearVerdadeSimples() {
+    if (jogadores.length === 0) return;
+
+    const verdadesNivel = perguntas[modoJogo]?.facil?.verdade || perguntas.dupla.facil.verdade;
+    if (!verdadesNivel || verdadesNivel.length === 0) {
+        document.getElementById('pergunta-simples').textContent = 'Nenhuma verdade encontrada.';
+        return;
+    }
+
+    const jogadorDaVez = jogadores[jogadorAtual];
+    let perguntaSorteada = verdadesNivel[Math.floor(Math.random() * verdadesNivel.length)];
+    
+    document.getElementById('vez-simples').textContent = `É a vez de: ${jogadorDaVez}`;
+    document.getElementById('pergunta-simples').textContent = perguntaSorteada;
+
+    jogadorAtual = (jogadorAtual + 1) % jogadores.length;
 }
 
 function voltarParaNiveis() {
-  document.getElementById("modo-verdade-section").style.display = "none";
-  document.getElementById("jogo-section").style.display = "block"; 
+    document.getElementById("modo-verdade-section").style.display = "none";
+    document.getElementById("nivel-section").style.display = "block";
 }
-
-window.onload = function () {
-  document.getElementById("modo-jogo-section").style.display = "block";
-  document.getElementById("cadastro-section").style.display = "none";
-  document.getElementById("nivel-section").style.display = "none";
-  document.getElementById("jogo-section").style.display = "none";
-  document.getElementById("modo-verdade-section").style.display = "none";
-  if(btnGirar) btnGirar.style.display = "none"; 
-};
-
 
 function abrirPixPopup() {
     document.getElementById('pix-popup').classList.remove('hidden');
@@ -886,23 +803,26 @@ function abrirPixPopup() {
 
 function fecharPixPopup() {
     document.getElementById('pix-popup').classList.add('hidden');
-    const feedback = document.getElementById("copy-feedback");
-    if (feedback) {
-        feedback.textContent = "";
-    }
 }
 
 function copiarChavePix() {
-    const pixKeyInput = document.getElementById('pix-key');
-    const feedback = document.getElementById("copy-feedback");
-
-    navigator.clipboard.writeText(pixKeyInput.value).then(() => {
-        feedback.textContent = "Chave copiada com sucesso!";
-        setTimeout(() => {
-            feedback.textContent = "";
-        }, 2500);
-    }).catch(err => {
-        feedback.textContent = "Erro ao copiar a chave.";
-        console.error('Erro ao copiar a chave PIX:', err);
-    });
+    const chavePixInput = document.getElementById('pix-key');
+    chavePixInput.select();
+    chavePixInput.setSelectionRange(0, 99999);
+    try {
+        document.execCommand('copy');
+        document.getElementById('copy-feedback').textContent = 'Chave copiada!';
+    } catch (err) {
+        document.getElementById('copy-feedback').textContent = 'Erro ao copiar.';
+    }
+    setTimeout(() => {
+        document.getElementById('copy-feedback').textContent = '';
+    }, 2000);
 }
+
+window.onload = function() {
+    document.getElementById("modo-jogo-section").style.display = "block";
+};
+
+document.getElementById("btn-cumpriu").addEventListener("click", () => avaliar(true));
+document.getElementById("btn-nao-cumpriu").addEventListener("click", () => avaliar(false));

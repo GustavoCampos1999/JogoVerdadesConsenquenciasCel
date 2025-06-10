@@ -15,7 +15,7 @@ const prendas = [
   "encha a boca com a bebida, e diga algo que admira no seu parceiro antes de engolir, se entornar, repita",
   "encha a boca com a bebida enquanto seu parceiro faz uma pergunta, só pode engolir e responder depois de um sinal combinado, se não responder repita",
   "encha a boca com a bebida e diga algo que admira em seu parceiro, se entornar repita",
-  "encha o copo (ou metade se o copo for grande) com a bebida e tente engolir o mais rapido possível sem deixar escorrer enquanto seu parceiro cronometra,entornar e/ou nao conseguir em 5seg, repita",
+  "encha o copo (ou metade se o copo for grande) com a bebida e tente engolir o mais rapido possível sem deixar escorrer enquanto seu parceiro cronometra, entornar e/ou nao conseguir em 5seg, repita",
   "beba um gole grande da bebida, e faça uma piada para seu parceiro, se não for engraçada repita",
   "beba um gole grande de bebida e cite uma curiosidade, se não for interessante repita",
   `encha o copo (ou metade se o copo for grande) com uma bebida e beba de uma vez o mais rápido possível enquanto seu parceiro fala ${quantidSorteada} ${categoriaSorteada} com a letra ${letraSorteada}, se ele terminar antes de você, repita`,
