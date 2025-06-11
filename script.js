@@ -133,7 +133,7 @@ function girarRoleta() {
     mensagem.textContent = "Sorteando...";
     btnGirar.style.display = "none";
 
-    const chanceDesafio = 0.9;
+    const chanceDesafio = 0.05;
     if ((nivelSelecionado === 'facil' || nivelSelecionado === 'medio') && Math.random() < chanceDesafio) {
         iniciarDesafioDeNivel();
         return;
@@ -204,7 +204,7 @@ function mostrarResultado(indice) {
     const spanAnimacao = animacao.querySelector('span');
     spanAnimacao.className = 'animacao-botao'; 
 
-    spanAnimacao.textContent = tipo === "verdade" ? "V" : "C";
+    spanAnimacao.textContent = tipo === "verdade" ? "Verdade" : "Consequência";
     void animacao.offsetWidth;
     animacao.classList.add(
         tipo === "verdade" ? "animacao-verdade" : "animacao-consequencia"
