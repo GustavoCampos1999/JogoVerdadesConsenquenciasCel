@@ -7,6 +7,7 @@
     --cor-destaque: #ffaad4;
     --cor-texto: #fff;
     --cor-fundo-container: rgba(0, 0, 0, 0.6);
+    --cor-morte-subita: #5e1f66;
 }
 
 body {
@@ -19,7 +20,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     padding-top: env(safe-area-inset-top, 10px);
     padding-right: env(safe-area-inset-right, 10px);
     padding-bottom: env(safe-area-inset-bottom, 10px);
@@ -37,20 +38,20 @@ body {
     box-shadow: 0 0 15px rgba(255, 0, 100, 0.6);
     text-align: center;
     width: 100%;
-    max-width: 400px; 
-    margin: 0 auto;
+    max-width: 400px;
+    margin: 1rem auto;
     transition: max-width 0.5s ease, padding 0.5s ease;
 }
 
 h1 {
-    font-size: clamp(1.5rem, 5vw, 1.8rem);
+    font-size: clamp(1.8rem, 7vw, 2.2rem);
     margin-top: 0.5rem;
     margin-bottom: 1rem;
     font-family: 'Quicksand', sans-serif;
 }
 
 h2 {
-    font-size: clamp(1.1rem, 4vw, 1.2rem); 
+    font-size: clamp(1.2rem, 5vw, 1.4rem);
     color: var(--cor-destaque);
     margin-bottom: 1rem;
 }
@@ -80,7 +81,7 @@ button {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
-    width: 100%; 
+    width: 100%;
     max-width: 300px;
     box-sizing: border-box;
     text-align: center;
@@ -106,7 +107,7 @@ button:disabled {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
 #campos-jogadores {
@@ -130,17 +131,17 @@ button:disabled {
 
 .campo-jogador-container.com-remover input[type="text"] {
     padding-right: 45px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 .campo-jogador-container.com-remover .btn-remover-jogador {
     position: absolute;
     top: 50%;
-    right: 5px; 
+    right: 5px;
     transform: translateY(-50%);
     width: 35px;
     height: 35px;
-    margin: 0; 
-    padding: 0; 
+    margin: 0;
+    padding: 0;
 }
 
 #btn-add-jogador {
@@ -169,8 +170,7 @@ button:disabled {
 
 .btn-secundario-acao,
 .botoes-acao-tela .btn-voltar-tela,
-#btn-voltar-discreto,
-#modo-verdade-section #btn-voltar {
+#btn-voltar-discreto {
     background: linear-gradient(135deg, #868e96, #5a6268);
     padding: 0.7rem 1.2rem;
     font-size: 0.9rem;
@@ -192,28 +192,28 @@ button:disabled {
     font-size: 0.95rem;
     background: linear-gradient(135deg, #ff007f, #e68a00);
     height: 60px;
-    max-width: none; 
+    max-width: none;
 }
 
 .nivel-btns button[onclick*="ativarModoSoVerdade"] {
     background: linear-gradient(135deg, #00c6ff, #0072ff);
 }
 
-#vez-do-jogador, #nivel-escolhido {
+#vez-do-jogador, #nivel-escolhido, #vez-simples {
     font-weight: bold;
     color: #ffc4ec;
     margin: 0.5rem 0;
     font-size: 1rem;
 }
 
-#resultado, #mensagem, #placar {
+#resultado, #mensagem, #placar, #pergunta-simples {
     margin-top: 0.5rem;
     font-size: 1.05rem;
     font-weight: bold;
     color: #ffe6f7;
     min-height: 30px;
     padding: 0 0.5rem;
-    word-break: break-word; 
+    word-break: break-word;
 }
 
 #placar {
@@ -221,7 +221,7 @@ button:disabled {
     line-height: 1.5;
 }
 
-#resultado {
+#resultado, #pergunta-simples {
     font-size: 1.1rem;
     min-height: 40px;
 }
@@ -229,7 +229,7 @@ button:disabled {
 #avaliacao {
     margin-top: 1.2rem;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     gap: 0.8rem;
     width:100%;
@@ -248,7 +248,7 @@ button:disabled {
 
 .escolha-container {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     gap: 1rem;
     margin: 1.2rem auto;
@@ -256,7 +256,7 @@ button:disabled {
 }
 
 .opcao {
-    width: 90%; 
+    width: 90%;
     max-width: 280px;
     padding: 1rem;
     border-radius: 12px;
@@ -294,11 +294,11 @@ button:disabled {
 }
 
 #animacao-resultado {
-    position: absolute; 
+    position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
-    z-index: 10;  
+    transform: translate(-50%, -50%);
+    z-index: 10;
     font-size: clamp(1.5rem, 6vw, 2rem);
     padding: 1.2rem 2rem;
     border-radius: 15px;
@@ -314,7 +314,7 @@ button:disabled {
 .hidden { display: none !important; }
 
 .creditos {
-    margin-top: 1.5rem; 
+    margin-top: 1.5rem;
     font-size: 0.75rem;
     color: var(--cor-destaque);
     opacity: 0.8;
@@ -349,9 +349,9 @@ button:disabled {
     border: 2px solid #ff9900;
     box-shadow: 0 0 15px #ff9900;
     box-sizing: border-box;
-    width: 100%; 
-    margin-left: auto; 
-    margin-right: auto; 
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #desafio-nivel-texto { font-size: 1.1rem; margin-bottom: 1.2rem; line-height: 1.5; }
@@ -359,7 +359,7 @@ button:disabled {
 .container-voto-jogador { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; }
 .nome-jogador-voto { font-weight: bold; text-align: left; padding-left: 5px; }
 .botoes-voto { display: flex; gap: 0.5rem; }
-.voto-btn { padding: 0.5rem 0.8rem; background-color: #6c757d; color: #fff; border-radius: 5px; font-size: 0.9rem; opacity: 0.6; width: 60px; }
+.voto-btn { padding: 0.5rem 0.8rem; background-color: #6c757d; color: #fff; border-radius: 5px; font-size: 0.9rem; opacity: 0.6; width: 100px; }
 .voto-btn.active { opacity: 1; transform: scale(1.1); font-weight: bold; }
 .voto-btn.sim.active { background-color: #28a745; box-shadow: 0 0 12px #28a745; }
 .voto-btn.nao.active { background-color: #dc3545; box-shadow: 0 0 12px #dc3545; }
@@ -371,10 +371,41 @@ body.desafio-ativo #jogo-section > *:not(#desafio-nivel-section):not(#animacao-r
 body.desafio-ativo #jogo-section {
     display: flex;
     align-items: center;
-    padding-top: 15%; 
+    padding-top: 15%;
+    flex-direction: column;
+    justify-content: center;
+}
 
-  flex-direction: column;
-  justify-content: center;
+#morte-subita-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 1.2rem;
+    border-radius: 15px;
+    border: 2px solid var(--cor-morte-subita);
+    box-shadow: 0 0 15px var(--cor-morte-subita);
+    width: 100%;
+}
+
+#morte-subita-desafio-texto {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: var(--cor-destaque);
+}
+
+#morte-subita-jogadores-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    margin: 1.2rem 0;
+}
+
+#btn-confirmar-morte-subita {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--cor-morte-subita), var(--cor-principal));
 }
 
 .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); display: flex; justify-content: center; align-items: center; z-index: 10000; }
@@ -384,3 +415,164 @@ body.desafio-ativo #jogo-section {
 .pix-key-container input { flex-grow: 1; background-color: rgba(255, 255, 255, 0.2); border-color: var(--cor-destaque); text-align: center; }
 .pix-key-container button { padding: 0.6rem 0.8rem; font-size: 0.8rem; width: auto; margin-top: 0; flex-shrink: 0; }
 .copy-feedback { color: #00ff99; font-size: 0.9rem; font-weight: bold; min-height: 20px; margin-top: 10px; }
+
+
+@keyframes pulsar-roxo-neon {
+    from {
+        box-shadow: 0 0 10px var(--cor-morte-subita), 0 0 20px var(--cor-morte-subita);
+    }
+    to {
+        box-shadow: 0 0 20px var(--cor-morte-subita), 0 0 40px var(--cor-morte-subita);
+    }
+}
+
+.voto-btn.morte-subita-cumpriu.active {
+    background-color: #28a745;
+    box-shadow: 0 0 12px #28a745;
+    animation: piscar-verde 0.5s infinite alternate;
+}
+
+.voto-btn.morte-subita-nao-cumpriu.active {
+    background-color: #dc3545;
+    box-shadow: 0 0 12px #dc3545;
+    animation: piscar-vermelho 0.5s infinite alternate;
+}
+
+#btn-confirmar-morte-subita.active {
+    animation: pulsar-roxo-neon 0.7s infinite alternate;
+}
+
+#tela-final-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+#tela-final-titulo {
+    font-size: 1.8rem;
+    color: var(--cor-destaque);
+    animation: brilhar 3s linear infinite;
+    margin-bottom: 0.5rem;
+}
+
+#tela-final-prenda-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--cor-principal);
+    border-radius: 10px;
+    padding: 1rem;
+    width: 90%;
+    box-shadow: 0 0 10px var(--cor-principal);
+}
+
+#tela-final-prenda-container h3 {
+    margin-top: 0;
+    color: var(--cor-texto);
+    font-size: 1.2rem;
+}
+
+#tela-final-prenda-texto {
+    font-size: 1rem;
+    color: var(--cor-destaque);
+    line-height: 1.5;
+}
+
+.animacao-morte-subita {
+  color: var(--cor-texto);
+  background-color: var(--cor-morte-subita);
+  border-color: var(--cor-morte-subita);
+  box-shadow: 0 0 8px var(--cor-morte-subita), 0 0 20px var(--cor-morte-subita);
+    animation: pulsar-roxo-neon 0.7s infinite alternate;
+}
+
+.animacao-morte-subita-btn {
+  color: var(--cor-texto);
+  font-weight: bold;
+}
+
+#modo-verdade-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    width: 100%;
+}
+
+.botoes-modo-verdade {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.botoes-modo-verdade button {
+    width: 90%;
+    max-width: 300px;
+    margin-top: 0;
+}
+
+#animacao-lupa {
+    font-size: 3.5rem;
+    padding: 1rem;
+    display: inline-block;
+    animation: pulsar-lupa 0.75s infinite alternate;
+}
+
+@keyframes pulsar-lupa {
+    from {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+        -webkit-text-size-adjust: 100%; 
+    }
+
+    .container {
+        padding: 1rem 0.75rem;
+        margin: 0.5rem auto; 
+    }
+
+    button {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    .btn-principal-acao {
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .nivel-btns button {
+        height: 55px;
+        font-size: 0.9rem;
+    }
+
+    #animacao-lupa {
+        font-size: 3rem;
+    }
+    
+    .voto-btn {
+        padding: 0.5rem;
+        width: 80px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .nivel-btns {
+        grid-template-columns: 1fr;
+    }
+}

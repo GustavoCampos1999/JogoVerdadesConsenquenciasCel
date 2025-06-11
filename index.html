@@ -2,16 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>V & C</title>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-9NRS380CQP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-9NRS380CQP');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9NRS380CQP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9NRS380CQP');
+  </script>
 
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
@@ -51,7 +51,7 @@
       </div>
       <button id="btn-add-jogador" onclick="adicionarCampoJogador()" style="display:none;">+ Adicionar Jogador</button>
       <div class="botoes-acao-cadastro">
-        <button class="btn-principal-acao" onclick="iniciar()">Começar</button> 
+        <button class="btn-principal-acao" onclick="iniciar()">Começar</button>
         <button class="btn-voltar-tela btn-secundario-acao" onclick="voltarParaSelecaoModo()">↩ Voltar</button>
       </div>
       <div class="creditos">
@@ -94,7 +94,7 @@
         <button id="btn-nao-cumpriu">Não Cumpriu</button>
       </div>
 
-      <div class="controles-rodada-acao"> 
+      <div class="controles-rodada-acao">
         <button id="btn-roleta" class="btn" style="display: none;">Sortear</button>
         <button id="btn-continuar-jogo" class="btn btn-secundario" style="display: none;">Continuar Jogo</button>
       </div>
@@ -114,17 +114,40 @@
         <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
       </div>
     </section>
-    
-    <div id="animacao-resultado" class="animacao-resultado hidden"><span></span></div>
+
+    <section id="morte-subita-section" style="display: none;">
+      <h2>☠️ MORTE SÚBITA ☠️</h2>
+      <p>O placar está 10 a 10! Para vencer, cumpram o desafio final.</p>
+      <p id="morte-subita-desafio-texto" class="resultado"></p>
+      <div id="morte-subita-jogadores-container">
+      </div>
+      <button id="btn-confirmar-morte-subita" class="btn-principal-acao">Confirmar Resultados</button>
+      <button class="btn-voltar-tela btn-secundario-acao" onclick="voltarParaSelecaoDeNivel()">↩ Voltar</button>
+      <div class="creditos">
+        Criado por Gustavo Campos<br>
+        <button id="coffee-btn" class="btn-link-apoio" onclick="abrirPixPopup()">❤️ Apoie o Desenvolvedor ❤️</button>
+      </div>
+    </section>
 
     <section id="modo-verdade-section" style="display:none;">
+      <div id="animacao-lupa" class="hidden">🔍</div>
       <div id="vez-simples"></div>
       <div id="pergunta-simples"></div>
-      <button id="btn-sortear-verdade" onclick="sortearVerdadeSimples()">Sortear Verdade</button>
-      <button id="btn-voltar" onclick="voltarParaNiveis()">Voltar</button>
+      <div class="botoes-modo-verdade">
+          <button id="btn-sortear-verdade" onclick="sortearVerdadeSimples()">Sortear Verdade</button>
+          <button id="btn-voltar" class="btn-secundario-acao" onclick="voltarParaNiveis()">Voltar</button>
+      </div>
     </section>
     
-    <button id="btn-reiniciar" style="display: none;" onclick="reiniciarJogo()">Jogar novamente</button>
+   <section id="tela-final-section" style="display: none;">
+     <h2 id="tela-final-titulo"></h2>
+     <div id="tela-final-prenda-container" style="display: none;">
+       <h3>Prenda Final:</h3>
+       <p id="tela-final-prenda-texto"></p>
+     </div>
+     <button id="btn-reiniciar" onclick="reiniciarJogo()">Jogar novamente</button>
+   </section>
+    <div id="animacao-resultado" class="animacao-resultado hidden"><span></span></div>
   </div>
 
   <div id="pix-popup" class="popup-overlay hidden">
@@ -143,8 +166,8 @@
       <p id="copy-feedback" class="copy-feedback"></p>
     </div>
   </div>
-  <script src="dados-prendas.js"></script> 
-  <script src="dados-perguntas.js"></script> 
+  <script src="dados-prendas.js"></script>
+  <script src="dados-perguntas.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
