@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
 
+/* Regra adicionada para prevenir overflow */
+html {
+    overflow-x: hidden;
+}
+
 :root {
     --cor-principal: #ff0055;
     --cor-secundaria: #6600cc;
@@ -21,6 +26,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow-x: hidden; /* Garante que o body também não transborde */
     padding-top: env(safe-area-inset-top, 10px);
     padding-right: env(safe-area-inset-right, 10px);
     padding-bottom: env(safe-area-inset-bottom, 10px);
@@ -534,10 +540,12 @@ body.desafio-ativo #jogo-section {
     }
 }
 
+
+/* --- AJUSTES PARA DISPOSITIVOS MÓVEIS --- */
 @media (max-width: 480px) {
     body {
         padding: 0.5rem;
-        -webkit-text-size-adjust: 100%; 
+        -webkit-text-size-adjust: 100%; /* Impede o zoom automático de fontes no iOS */
     }
 
     .container {

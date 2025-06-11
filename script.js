@@ -3,7 +3,6 @@ let jogadores = [];
 let jogadoresIniciais = []; 
 let jogadorAtual = 0;
 let pontos = [];
-let penalidades = [];
 let desafiosNaoCumpridos = [];
 let ultimaEscolha = "";
 let emojiNivel = "";
@@ -91,7 +90,6 @@ function iniciar() {
     jogadores = nomesInputTemp;
     jogadoresIniciais = [...jogadores]; 
     pontos = new Array(jogadores.length).fill(0);
-    penalidades = new Array(jogadores.length).fill(0);
     desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
     falhouAlgumaVez = new Array(jogadores.length).fill(false);
     jogadorAtual = 0;
@@ -306,7 +304,6 @@ function avaliar(cumpriu) {
         spanAnimacao.textContent = "✔";
         desafiosNaoCumpridos[jogadorAtual] = 0;
     } else {
-        penalidades[jogadorAtual]++;
         desafiosNaoCumpridos[jogadorAtual]++;
         falhouAlgumaVez[jogadorAtual] = true;
         if (pontos[jogadorAtual] > 0) {
@@ -540,7 +537,6 @@ function anunciarPerdedor(jogadorPerdedor) {
     if (indicePerdedor > -1) {
         jogadores.splice(indicePerdedor, 1);
         pontos.splice(indicePerdedor, 1);
-        penalidades.splice(indicePerdedor, 1);
         desafiosNaoCumpridos.splice(indicePerdedor, 1);
         falhouAlgumaVez.splice(indicePerdedor, 1);
         if (jogadorAtual >= indicePerdedor) {
@@ -793,7 +789,6 @@ function reiniciarJogo() {
     document.getElementById("nivel-section").style.display = "block";
 
     pontos = new Array(jogadores.length).fill(0);
-    penalidades = new Array(jogadores.length).fill(0);
     desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
     falhouAlgumaVez = new Array(jogadores.length).fill(false);
     jogadorAtual = 0;
@@ -844,7 +839,6 @@ function voltarParaSelecaoDeNivel() {
     document.getElementById("nivel-section").style.display = "block";
 
     pontos = new Array(jogadores.length).fill(0);
-    penalidades = new Array(jogadores.length).fill(0);
     desafiosNaoCumpridos = new Array(jogadores.length).fill(0);
     jogadorAtual = 0;
     aguardandoPrenda = false;
